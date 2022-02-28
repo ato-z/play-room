@@ -44,7 +44,7 @@ export class ServiceACGTV{
     static async getDetailById(id: number|string): Promise<interfaceACG.acgDetail|never>{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        const url = 'https://www.agemys.com/detail/' + id
+        const url = this.domain + 'detail/' + id
         await page.goto(url);
         const detail = await page.evaluate(() => {
             const menuTitles = document.querySelectorAll('#menu0 li')
