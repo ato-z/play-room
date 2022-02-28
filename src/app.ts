@@ -15,11 +15,11 @@ app.use(exceptionHandle)
 // 请求体处理
 app.use(withResquestBodyHandle)
 
-// 统一返回的数据格式类型
-app.use(withResultHandle)
-
 // 登录校验
 app.use(withTokenHandle)
+
+// 统一返回的数据格式类型
+app.use(withResultHandle)
 
 // 创建容器
 const contriller = createContainer()
