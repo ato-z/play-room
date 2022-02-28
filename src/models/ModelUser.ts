@@ -23,7 +23,7 @@ interface ResultSetHeader{
 /**
  * 用户数据模型， 负责 az_user 表的增删改查
  */
-export class ModuleUser{
+export class ModelUser{
 
     /**
      * 新增用户进数据库，并返回新增id
@@ -36,7 +36,7 @@ export class ModuleUser{
      *      password: '加密后的64位密码',
      *      create_date: '2022-02-24 10:00:00'
      * }
-     * await ModuleUser(udata) // 新增用户ID => 1
+     * await ModelUser(udata) // 新增用户ID => 1
      * ```
      */
     static insertUser(udata: interfaceUser.detail): Promise<number>{
@@ -58,7 +58,7 @@ export class ModuleUser{
      * @param uid {number} 用户id
      * @returns interfaceUser.detail
      * ```
-     * const udata = await ModuleUser.find(1)
+     * const udata = await ModelUser.find(1)
      * {
      *      id: 1,
      *      nickname: '用户昵称',
