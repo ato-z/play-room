@@ -16,7 +16,7 @@ export class UserController{
     /**
     * @api {GET} /v1/users/temporary 注册临时用户
     * @apiName 注册临时用户
-    * @apiGroup 用户相关
+    * @apiGroup User
     * @apiVersion 1.0.0
     * 
     * @apiSuccess  {Number} code 成功时返回 200
@@ -46,7 +46,7 @@ export class UserController{
     /**
     * @api {POST} /v1/users/upname 更新用户昵称
     * @apiName 更新用户昵称
-    * @apiGroup 用户相关
+    * @apiGroup User
     * @apiVersion 1.0.0
     * 
     * @apiBody {String} nickname   用户昵称
@@ -54,6 +54,7 @@ export class UserController{
     * @apiSuccess  {Number} code 成功时返回 200
     * @apiHeaderExample {json} Header-Example:
     * {
+    *   "content-type": "application/json",
     *   "token": "通过sign码可换取"
     * }
     *  
