@@ -1,6 +1,6 @@
 import shajs from 'sha.js'
 import { interfaceUser } from '../interface/interfacaUser'
-import { ModuleUser } from '../models/ModelUser'
+import { ModelUser } from '../models/ModelUser'
 import config from '../config'
 import { ExceptionUser } from '../exceptions'
 
@@ -15,7 +15,7 @@ export class ServiceUser{
      * ```
      */
     static get(uid: number): Promise<interfaceUser.detail|never>{
-        return ModuleUser.find(uid)
+        return ModelUser.find(uid)
     }
 
     /**
@@ -28,7 +28,7 @@ export class ServiceUser{
      * ```
      */
     static upData(uid: number, updata: Partial<interfaceUser.detail>): void{
-        return ModuleUser.updata({id: uid}, updata)
+        return ModelUser.updata({id: uid}, updata)
     }
 
     /**
@@ -51,7 +51,7 @@ export class ServiceUser{
      * @returns 用户的新增id
      */
     static async createUser(udata: interfaceUser.detail): Promise<interfaceUser.detail> {
-        const id = await ModuleUser.insertUser(udata)
+        const id = await ModelUser.insertUser(udata)
         const _udata = Object.assign({id}, udata)
         return _udata
     }
@@ -90,7 +90,7 @@ export class ServiceUser{
         const uid: number = (_codeId - hashVal) / _keyIndex
         
         // 对用户身份进行校验
-        const udata = await ModuleUser.find(uid)
+        const udata = await ModelUser.find(uid)
         if (udata.password !== pass) { throw new ExceptionUser.MissSign('密码已被更改') }
         return udata
     }
