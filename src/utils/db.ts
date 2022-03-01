@@ -9,3 +9,7 @@ export const C = db.C
 export const R = db.R
 export const U = db.U
 export const D = db.D
+
+if (config.debug) {
+    db.lifetime.listener('insert', console.log)
+}

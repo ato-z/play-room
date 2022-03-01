@@ -18,6 +18,6 @@ CREATE TABLE `az_room` (
   `from_id` int(11) unsigned NOT NULL COMMENT '媒体来源的id',
   `master_id` int(11) unsigned NOT NULL COMMENT '创建者的用户id',
   `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  `delele_date` datetime DEFAULT NULL,
+  `delete_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;

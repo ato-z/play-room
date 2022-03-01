@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "apidoc": "apidoc -i src/controller/ -o apidoc/", 
+    "apidoc": "apidoc -i src/controller/ -o doc/api", 
     "test": "jest",
     "test:ui": "majestic"
   },

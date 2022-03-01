@@ -32,4 +32,12 @@ export class ModelRoom{
             delete_date: null
         }, where), null, [start, end]) as interfaceRoom.detail[]
     }
+
+    static async create(data: interfaceRoom.detail) {
+        return insertRoom(data).then(result => result.insertId)
+    }
+
+    static async get(room_id) {
+        return findRoom({id: room_id, delete_date: null})
+    }
 }

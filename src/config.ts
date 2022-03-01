@@ -7,7 +7,7 @@ export default {
     runPort: 3001,
 
     // 开启debug调试，发生异常不会隐藏写入日志。而是直接抛出
-    debug: false,
+    debug: true,
 
     // 用户登录密钥有效期， 登录密钥可换取token。 单位毫秒
     signTime: 0, // 0为永久有效， 除非用户更换密码

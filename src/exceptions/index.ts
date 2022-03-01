@@ -24,22 +24,7 @@ export class BaseExceotion extends Error{
     code = 400
 }
 
-/**
- * agetv站点的错误异常
- */
-export namespace ExceptionACG{
-    export class NotDetail extends BaseExceotion{
-        code = 204
-        msg = '嗨呀～内容跑掉了'
-        errorCode = 20100
-    }
 
-    export class MissPlayLink extends BaseExceotion{
-        code = 204
-        msg = '嗨呀～播放链接不见了'
-        errorCode = 20101
-    }
-}
 
 /**
  * 用户相关的异常
@@ -49,13 +34,13 @@ export namespace ExceptionUser{
     export class MissSign extends BaseExceotion{
         code = 401
         msg = 'sign已失效,请重新登录～'
-        errorCode = 30100;
+        errorCode = 20100;
     }
 
     export class MissUser extends BaseExceotion{
         code = 403
         msg = '当前sign已失效,请重新登录～'
-        errorCode = 30200
+        errorCode = 20200
     }
 }
 
@@ -67,6 +52,34 @@ export namespace ExceptionUser{
     export class Miss extends BaseExceotion{
         code = 403
         msg = '当前token不存在或已过期'
-        errorCode = 40100;
+        errorCode = 30100;
+    }
+}
+
+/**
+ * agetv站点的错误异常
+ */
+ export namespace ExceptionACG{
+    export class NotDetail extends BaseExceotion{
+        code = 204
+        msg = '嗨呀～内容跑掉了'
+        errorCode = 40100
+    }
+
+    export class MissPlayLink extends BaseExceotion{
+        code = 204
+        msg = '嗨呀～播放链接不见了'
+        errorCode = 40101
+    }
+}
+
+/**
+ * 房间相关的异常
+ */
+ export namespace ExceptionRoom{
+    export class NotDetail extends BaseExceotion{
+        code = 204
+        msg = '嗨呀～内容跑掉了'
+        errorCode = 50100
     }
 }
