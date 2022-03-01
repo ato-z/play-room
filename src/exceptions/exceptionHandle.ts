@@ -9,7 +9,6 @@ export default async (ctx: Context, next: () => {}) => {
     try {
         const result = await next()
     } catch (error) {
-        if (config.debug === true) { throw error }
         let code = 500
         const result = { errorCode: 999,  msg: '网络异常～' }
         if (error instanceof BaseExceotion) {
@@ -17,6 +16,7 @@ export default async (ctx: Context, next: () => {}) => {
             result.msg = error.message || error.msg 
             code = error.code || code
         } else { // 写入日志
+            if (config.debug === true) { throw error }
             const content = `${ctx.method} ${ctx.url}
 header: ${JSON.stringify(ctx.header)}`
             ServiceLog.writeToDay(error, content)
