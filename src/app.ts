@@ -9,6 +9,16 @@ import config from './config'
 
 const app = new Koa() 
 
+// 开启跨域
+app.use(async (ctx, next) => {
+    if (config.crossDomain) {
+        ctx.set('Access-Control-Allow-Origin', '*');
+        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+        ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    }
+    await next()
+})
+
 // 异常捕获
 app.use(exceptionHandle)
 

@@ -9,6 +9,9 @@ export default {
     // 开启debug调试，发生异常不会隐藏写入日志。而是直接抛出
     debug: true,
 
+    // 是否允许跨域
+    crossDomain: true,
+
     // 用户登录密钥有效期， 登录密钥可换取token。 单位毫秒
     signTime: 0, // 0为永久有效， 除非用户更换密码
     //signTime: 30 * 24 * 3600 * 1000, // 30天有效
