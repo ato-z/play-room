@@ -6,6 +6,7 @@ import { interfaceRoom } from "../../interface/interfaceRoom";
 import { ServicePlayRoom } from "../../services/ServicePlayRoom";
 import { ServiceRoom } from "../../services/ServiceRoom";
 import { ServiceToken } from "../../services/ServiceToken";
+import { ServiceUser } from "../../services/ServiceUser";
 import { ServiceWs } from "../../services/ServiceWs";
 
 @route('/v1/room')
@@ -320,9 +321,11 @@ export class RoomController{
         const room_id = parseInt(ctx.request.query.room_id as string) 
         if (!room_id) { throw new ParamExceotion('room_id不能为空') }
         const token = ServiceToken.get(ctx.header.token as string)
-        const playRoom = await ServicePlayRoom.of(room_id, token.id)
-        const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)[1] || config.runIp
-        const wss = playRoom.getCurrent(`wx://${domain}:`)
+        const uid = token.id
+        const userService = await ServiceUser.of(uid)
+        const playRoom = await ServicePlayRoom.of(room_id, uid)
+        userService.joinInRoom(playRoom) // 当用户调用房间详情时，证明在房间内。自动加入到该房
+        const wss = playRoom.getCurrent(this.codeWsURL(ctx))
         return Object.assign({}, wss, playRoom.room)
     }
 
@@ -361,7 +364,35 @@ export class RoomController{
         if (!room_id) { throw new ParamExceotion('room_id不能为空') }
         const token = ServiceToken.get(ctx.header.token as string)
         const playRoom = await ServicePlayRoom.of(room_id, token.id)
+        return playRoom.getCurrent(this.codeWsURL(ctx))
+    }
+
+    @route('/join_wss')
+    @POST()
+    async joinWs(ctx: Context) {
+        const query = ctx.bodyJSON as interfaceRoom.joinWssQuery
+        const token = ServiceToken.get(ctx.header.token as string)
+        const uid = token.id
+        const userService = await ServiceUser.of(uid)
+        const {playRoom} = userService
+        if (playRoom.chatWs.port === query.port && playRoom.chatWs.wsList[query.id]) {
+            userService.charWs = playRoom.chatWs.wsList[query.id]
+            return {msg: '已加入聊天室'}
+        }
+        if (playRoom.playWs.port === query.port && playRoom.playWs.wsList[query.id]) {
+            userService.playWs = playRoom.playWs.wsList[query.id]
+            return {msg: '已加入放映厅'}
+        }
+        throw new ParamExceotion('加入wss服务失败～')
+    }
+
+    /**
+     * 基于当前服务端返回wss服务根地址
+     * @param ctx 
+     * @returns 
+     */
+    private codeWsURL(ctx: Context): string {
         const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)[1] || config.runIp
-        return playRoom.getCurrent(`wx://${domain}:`)
+        return `ws://${domain}:`
     }
 }

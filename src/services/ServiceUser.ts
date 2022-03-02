@@ -3,22 +3,38 @@ import { interfaceUser } from '../interface/interfacaUser'
 import { ModelUser } from '../models/ModelUser'
 import config from '../config'
 import { ExceptionUser } from '../exceptions'
+import { ServicePlayRoom } from './ServicePlayRoom'
 
 const userMap = new Map()
 export class ServiceUser{
     private udata: interfaceUser.detail
     private uid: number
+    
+    public playRoom: ServicePlayRoom
+    public playWs: any = null
+    public charWs: any = null
+
     constructor(uid: number) {
         this.uid = uid
     }
     
+    /**
+     * 加入房间
+     */
+    public joinInRoom(playRoom: ServicePlayRoom) {
+        this.playRoom = playRoom
+    }
+
+    /**
+     * 初始化方法
+     */
     protected async init() {
         const udata = await ModelUser.find(this.uid)
         this.udata = udata 
     }
 
     /**
-     * 
+     * 创建一个用户实例
      * @param uid 
      * @returns 
      */

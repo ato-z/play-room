@@ -1,5 +1,6 @@
 import config from "../config"
 import { ExceptionWSS } from "../exceptions"
+import { WS_CODE } from "../menu/WS_CODE"
 const {WebSocketServer} = require('ws')
 
 let start = config.wxStartPort
@@ -7,6 +8,7 @@ let start = config.wxStartPort
 export class ServiceWs{
     static portOpen: {[propName: string]: boolean} = {}
     public port: number
+    public wsList = []
     private wss: typeof WebSocketServer
     private setIntervalIndex: NodeJS.Timer
 
@@ -17,10 +19,7 @@ export class ServiceWs{
         this.wss = wss
         this.init()
     }
-
-    /**
-     * 统一发送到客户的数据编码格式
-     */
+  
     /**
      * 统一发送到客户的数据编码格式
      * @param data {any} 发送的数据
@@ -49,17 +48,24 @@ export class ServiceWs{
      * 初始化操作， 开启心跳包
      */
     private init() {
-        const {wss} = this
+        const {wss, wsList, port} = this
         /** 每次链接成功后 */
-        wss.on('connection', function connection(ws) {
+        wss.on('connection',  ws => {
+            /** 监听用户发送的信息 */
+            this.onMeassage(ws)
+
             /** 标记活动用户 */
             ws.on('pong', function () {
                 this.isAlive = true
             })
+            const linkNum = this.wsList.length
+            wsList.push(ws)
+            
             /** 链接成功发送一条消息 */
-            ws.send(ServiceWs.codeSendClientData({msg: 'opening...'}))
+            ws.send(ServiceWs.codeSendClientData({port, id: linkNum}, WS_CODE.JOIN_ID))
         })
         
+        /** 发送心跳包 */
         this.setIntervalIndex = setInterval(function ping() {
             wss.clients.forEach(function (ws) {
               if (ws.isAlive === false) return ws.terminate()
@@ -67,6 +73,23 @@ export class ServiceWs{
               ws.ping()
             });
         }, 30000)
+
+        /** 服务关闭时 */
+        wss.on('close',  () =>{
+            clearInterval(this.setIntervalIndex)
+        })
+    }
+
+    private onMeassage(ws) {
+        ws.on('message', function(data) {
+            try {
+                const codeData = JSON.parse(data)
+                if (codeData.target === undefined) { throw new Error('target不能为空') }
+                console.log(codeData)
+            } catch(error) {
+                ws.send(ServiceWs.codeSendClientData({msg: error.message}, WS_CODE.ERROR))
+            }
+        })
     }
 
     /**

@@ -11,6 +11,11 @@ export module interfaceRoom{
         playLink: string|null
     }
 
+    export interface joinWssQuery{
+        port: number;
+        id: number;
+    }
+
     export interface wsStatuProp extends statuProp{
         playWs: string;
         chatWs: string
