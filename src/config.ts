@@ -16,6 +16,12 @@ export default {
     // 过期时间为2小时
     expTime: 2 * 3600 * 1000,
 
+    // 长链接端口初始位置
+    wxStartPort: 3002,
+
+    // 最大可创建的房间数
+    maxRoom: 512,
+
     // 加密用的hash
     hash: 'yFan',
 

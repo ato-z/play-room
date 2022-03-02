@@ -32,19 +32,19 @@ export class ServiceRoom{
      */
     static async create(data: interfaceRoom.detail): Promise<interfaceRoom.detail> {
         data.create_date = date('y-m-d h:i:s')
-        console.log(data)
         const roomID = await ModelRoom.create(data)
         return Object.assign({id: roomID}, data)
     }
 
-    static async get(room_id: number) {
+    static async get(room_id: number, current_uid: number) {
         const room = await ModelRoom.get(room_id)
         if (room === null) { throw new ExceptionRoom.NotDetail() }
-        const {title, des, create_date, open} = room
+        const {title, des, create_date, open, id, master_id} = room
+        const is_master = master_id === current_uid
         if (room.from === ROOM_FROM.AGETV) {
             const from_data = await ServiceACGTV.getDetailById(room.from_id)
             const data:interfaceRoom.detailForm<interfaceACG.acgDetail> = {
-                title, des, create_date, from_data, open
+                id, master_id, is_master, title, des, open, create_date, from_data
             }
             return data
         }

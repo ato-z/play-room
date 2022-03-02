@@ -1,10 +1,11 @@
 import { GET, POST, route } from "awilix-koa";
 import { Context } from "koa";
+import config from "../../config";
 import { ParamExceotion } from "../../exceptions";
 import { interfaceRoom } from "../../interface/interfaceRoom";
-import { ROOM_FROM } from "../../menu/ROOM_FROM";
-import { ServiceACGTV } from "../../services/ServiceACGTV";
+import { ServicePlayRoom } from "../../services/ServicePlayRoom";
 import { ServiceRoom } from "../../services/ServiceRoom";
+import { ServiceToken } from "../../services/ServiceToken";
 
 @route('/v1/room')
 export class RoomController{
@@ -95,8 +96,9 @@ export class RoomController{
         keys.forEach(key => {
             if (!query[key]) { throw new ParamExceotion(key + '不能为空') }
         })
+        const token = ServiceToken.get(ctx.header.token as string)
         const data: interfaceRoom.detail = Object.assign({
-            master_id: 1,
+            master_id: token.id,
         }, query)
         const newRoom = await ServiceRoom.create(data)
         return newRoom
@@ -120,8 +122,11 @@ export class RoomController{
     * @apiSuccessExample {type} Success-Response:
     *{
     *    "data": {
+    *        "id": 1, // 房间id
     *        "title": "房间标题",
-    *        "des": "描述",
+    *        "des": "房间描述",
+    *        "master_id": 1, // 房主id
+    *        "is_master": true, // 房主为true 反之为false
     *        "create_date": "2022-03-01T08:54:48.000Z",
     *        "from_data": {
     *            "poster": "https://sc04.alicdn.com/kf/H6e5638a3490a4c4797d7e1bee334cab6J.jpg",
@@ -308,7 +313,18 @@ export class RoomController{
     async detail(ctx: Context) {
         const room_id = ctx.request.query.room_id as string
         if (!room_id) { throw new ParamExceotion('room_id不能为空') }
-        const room = await ServiceRoom.get(parseInt(room_id))
+        const token = ServiceToken.get(ctx.header.token as string)
+        const room = await ServiceRoom.get(parseInt(room_id), token.id)
         return room
+    }
+
+    @route('/statu')
+    @GET()
+    async statu(ctx: Context) {
+        const room_id = parseInt(ctx.request.query.room_id as string) 
+        if (!room_id) { throw new ParamExceotion('room_id不能为空') }
+        const token = ServiceToken.get(ctx.header.token as string)
+        const room = await ServicePlayRoom.of(room_id, token.id)
+        return room.getCurrent(`wx:${config.runIp}:`)
     }
 }

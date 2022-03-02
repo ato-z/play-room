@@ -4,7 +4,31 @@ import { ModelUser } from '../models/ModelUser'
 import config from '../config'
 import { ExceptionUser } from '../exceptions'
 
+const userMap = new Map()
 export class ServiceUser{
+    private udata: interfaceUser.detail
+    private uid: number
+    constructor(uid: number) {
+        this.uid = uid
+    }
+    
+    protected async init() {
+        const udata = await ModelUser.find(this.uid)
+        this.udata = udata 
+    }
+
+    /**
+     * 
+     * @param uid 
+     * @returns 
+     */
+    static async of(uid: number): Promise<ServiceUser> {
+        if (userMap.has(uid)) { return userMap.get(uid) }
+        const user = new this(uid)
+        userMap.set(uid, user)
+        await user.init()
+        return user
+    }
 
     /**
      * 获取用户信息
