@@ -16,7 +16,6 @@ export default async(ctx: Context, next: () => {}) => {
         errorCode: 0
     }
     let code = 200
-    console.log(result)
     if (result === undefined || result === null || result === '') { code = 204 }
     if (typeof result === 'string') {
         content.data = result
@@ -28,6 +27,7 @@ export default async(ctx: Context, next: () => {}) => {
         content.data = result
         if (result.length === 0) { code = 204 }
     }
+    ctx.set('content-type', 'application/json')
     ctx.body = JSON.stringify(content)
     ctx.status = code
 }

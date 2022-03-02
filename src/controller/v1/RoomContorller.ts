@@ -6,6 +6,7 @@ import { interfaceRoom } from "../../interface/interfaceRoom";
 import { ServicePlayRoom } from "../../services/ServicePlayRoom";
 import { ServiceRoom } from "../../services/ServiceRoom";
 import { ServiceToken } from "../../services/ServiceToken";
+import { ServiceWs } from "../../services/ServiceWs";
 
 @route('/v1/room')
 export class RoomController{
@@ -122,6 +123,11 @@ export class RoomController{
     * @apiSuccessExample {type} Success-Response:
     *{
     *    "data": {
+    *        "liIndex": null, // null表示当前没有播放列表
+    *        "itemIndex": null, // 播放列表的下标
+    *        "playLink": null, // 当前房间在播放的视频链接
+    *        "playWs": "wx://127.0.0.1:3002",
+    *        "chatWs": "wx://127.0.0.1:3003",
     *        "id": 1, // 房间id
     *        "title": "房间标题",
     *        "des": "房间描述",
@@ -311,20 +317,51 @@ export class RoomController{
     @route('/detail')
     @GET()
     async detail(ctx: Context) {
-        const room_id = ctx.request.query.room_id as string
+        const room_id = parseInt(ctx.request.query.room_id as string) 
         if (!room_id) { throw new ParamExceotion('room_id不能为空') }
         const token = ServiceToken.get(ctx.header.token as string)
-        const room = await ServiceRoom.get(parseInt(room_id), token.id)
-        return room
+        const playRoom = await ServicePlayRoom.of(room_id, token.id)
+        const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)[1] || config.runIp
+        const wss = playRoom.getCurrent(`wx://${domain}:`)
+        return Object.assign({}, wss, playRoom.room)
     }
 
+
+    /**
+    * @api {GET} /v1/room/statu 房间当前状态
+    * @apiName 房间当前状态
+    * @apiGroup Room
+    * @apiVersion 1.0.0
+    * 
+    * @apiParam (url参数) {String} room_id 房间id
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "token": "通过sign码可换取"
+    * }
+    *  
+    * @apiSuccessExample {type} Success-Response:
+    *{
+    *    "data": {
+    *        "liIndex": null, // null表示当前没有播放列表
+    *        "itemIndex": null, // 播放列表的下标
+    *        "playLink": null, // 当前房间在播放的视频链接
+    *        "playWs": "wx://127.0.0.1:3002",
+    *        "chatWs": "wx://127.0.0.1:3003",
+    *   },
+    *   "msg": "ok",
+    *   "errorCode": 0
+    * }
+    * */
     @route('/statu')
     @GET()
     async statu(ctx: Context) {
         const room_id = parseInt(ctx.request.query.room_id as string) 
         if (!room_id) { throw new ParamExceotion('room_id不能为空') }
         const token = ServiceToken.get(ctx.header.token as string)
-        const room = await ServicePlayRoom.of(room_id, token.id)
-        return room.getCurrent(`wx:${config.runIp}:`)
+        const playRoom = await ServicePlayRoom.of(room_id, token.id)
+        const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)[1] || config.runIp
+        return playRoom.getCurrent(`wx://${domain}:`)
     }
 }

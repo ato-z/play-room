@@ -1,12 +1,12 @@
 import { ParamExceotion } from "../exceptions"
 import { interfaceRoom } from "../interface/interfaceRoom"
 import { ServiceRoom } from "./ServiceRoom"
-import { ServiceWs } from "./ServiceWx"
+import { ServiceWs } from "./ServiceWs"
 
 const roomMap = new Map()
 export class ServicePlayRoom{
 
-    private room: interfaceRoom.detailForm<any>
+    public room: interfaceRoom.detailForm<any>
 
     private liIndex: number| null = null
     private itemIndex: number | null = null
@@ -15,26 +15,26 @@ export class ServicePlayRoom{
     public playWs: ServiceWs
     public chatWs: ServiceWs
 
-    constructor(room: interfaceRoom.detailForm<any>) {
+    constructor(room: interfaceRoom.detailForm<any>, playWs: ServiceWs, chatWs: ServiceWs) {
         this.room = room
-        this.playWs = new ServiceWs()
-        this.chatWs = new ServiceWs()
+        this.playWs = playWs
+        this.chatWs = chatWs
     }
 
-    static async of(roomID: number, master_id: number): Promise<ServicePlayRoom>{
+    static async of(roomID: number, masterID: number): Promise<ServicePlayRoom>{
         if (roomMap.has(roomID)) { return roomMap.get(roomID) }
-        console.log('开始')
-        const room = await ServiceRoom.get(roomID, master_id)
-        console.log('卡住了？')
-        const playRoom = new ServicePlayRoom(room)
-        roomMap.set(roomID, playRoom)
+        const playWs = new ServiceWs()
+        const chatWs = new ServiceWs()
+        const room = await ServiceRoom.get(roomID, masterID)
+        const playRoom = new ServicePlayRoom(room, playWs, chatWs)
+        roomMap.set(room.id, playRoom)
         return playRoom
     }
 
     public getCurrent(addrss: string): interfaceRoom.wsStatuProp {
         const {liIndex, itemIndex, playLink} = this
-        const playWs = addrss + this.playWs.port
-        const chatWs = addrss + this.chatWs.port
+        const playWs = addrss + this?.playWs?.port
+        const chatWs = addrss + this?.chatWs?.port
         return {liIndex, itemIndex, playLink, playWs, chatWs}
     }
     

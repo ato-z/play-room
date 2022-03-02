@@ -21,6 +21,7 @@ export default async (ctx: Context, next: () => {}) => {
 header: ${JSON.stringify(ctx.header)}`
             ServiceLog.writeToDay(error, content)
         }
+        ctx.set('content-type', 'application/json')
         ctx.status = code
         ctx.body = JSON.stringify(result)
     }

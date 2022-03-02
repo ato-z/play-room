@@ -61,13 +61,13 @@ export namespace ExceptionUser{
  */
  export namespace ExceptionACG{
     export class NotDetail extends BaseExceotion{
-        code = 204
+        code = 200
         msg = '嗨呀～内容跑掉了'
         errorCode = 40100
     }
 
     export class MissPlayLink extends BaseExceotion{
-        code = 204
+        code = 200
         msg = '嗨呀～播放链接不见了'
         errorCode = 40101
     }
@@ -76,10 +76,21 @@ export namespace ExceptionUser{
 /**
  * 房间相关的异常
  */
- export namespace ExceptionRoom{
+export namespace ExceptionRoom{
     export class NotDetail extends BaseExceotion{
-        code = 204
+        code = 200
         msg = '嗨呀～内容跑掉了'
         errorCode = 50100
+    }
+}
+
+/**
+ * WebSocketServer的异常
+ */
+export namespace ExceptionWSS{
+    export class MaxConnect extends BaseExceotion{
+        code = 400
+        msg = '当前房间已达上限'
+        errorCode = 60000
     }
 }

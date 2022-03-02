@@ -1,13 +1,8 @@
 import config from "../config"
+import { ExceptionWSS } from "../exceptions"
 const {WebSocketServer} = require('ws')
 
 let start = config.wxStartPort
-
-
-function codeSendClientData<T>(data:T, _code?: number): string {
-    const code = _code || 0
-    return JSON.stringify({data, code})
-}
 
 export class ServiceWs{
     static portOpen: {[propName: string]: boolean} = {}
@@ -82,9 +77,10 @@ export class ServiceWs{
         const vals = Object.entries(ServiceWs.portOpen)
         const len = vals.length
         if (len === 0) { return this.setPort(start)}
+        if (len > config.maxRoom) { throw new ExceptionWSS.MaxConnect() }
         let i = 0
         while (i < len) {
-            const item = vals[i]
+            const item = vals[i++]
             if (item[1] === false) { return this.setPort(item[0]) }
         }
         return this.setPort(start += 1)
