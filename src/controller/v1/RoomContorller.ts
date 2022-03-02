@@ -367,6 +367,30 @@ export class RoomController{
         return playRoom.getCurrent(this.codeWsURL(ctx))
     }
 
+    /**
+    * @api {POST} /v1/room/join_wss 加入房间的WebSocket服务
+    * @apiName 加入房间的WebSocket服务
+    * @apiGroup Room
+    * @apiVersion 1.0.0
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "token": "通过sign码可换取"
+    * }
+    * 
+    * @apiBody {Number} port  接口号：在WebSocket成功链接可获取
+    * @apiBody {Number} id    属于该端口的键：在WebSocket成功链接可获取
+    *  
+    * @apiSuccessExample {type} Success-Response:
+    *{
+    *    "data": {
+    *        "msg": "已加入放映厅/聊天室"
+    *   },
+    *   "msg": "ok",
+    *   "errorCode": 0
+    * }
+    * */
     @route('/join_wss')
     @POST()
     async joinWs(ctx: Context) {
