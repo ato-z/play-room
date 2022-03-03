@@ -61,13 +61,13 @@ export namespace ExceptionUser{
  */
  export namespace ExceptionACG{
     export class NotDetail extends BaseExceotion{
-        code = 200
+        code = 400
         msg = '嗨呀～内容跑掉了'
         errorCode = 40100
     }
 
     export class MissPlayLink extends BaseExceotion{
-        code = 200
+        code = 400
         msg = '嗨呀～播放链接不见了'
         errorCode = 40101
     }
@@ -78,9 +78,21 @@ export namespace ExceptionUser{
  */
 export namespace ExceptionRoom{
     export class NotDetail extends BaseExceotion{
-        code = 200
+        code = 400
         msg = '嗨呀～内容跑掉了'
         errorCode = 50100
+    }
+
+    export class NotJoinPlayRoom extends BaseExceotion{
+        code = 403
+        msg = '未加入放映厅'
+        errorCode = 50200
+    }
+
+    export class WaitJoin extends BaseExceotion{
+        code = 400
+        msg = '放映厅正在初始化中...请稍后'
+        errorCode = 50201
     }
 }
 

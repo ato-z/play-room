@@ -16,6 +16,11 @@ export module interfaceRoom{
         id: number;
     }
 
+    export interface switchPlayQuery{
+        liIndex: number;
+        itemIndex: number;
+    }
+
     export interface wsStatuProp extends statuProp{
         playWs: string;
         chatWs: string

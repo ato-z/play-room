@@ -7,12 +7,12 @@ import { ServicePlayRoom } from './ServicePlayRoom'
 
 const userMap = new Map()
 export class ServiceUser{
-    private udata: interfaceUser.detail
+    public udata: interfaceUser.detail
     private uid: number
     
     public playRoom: ServicePlayRoom
-    public playWs: any = null
-    public charWs: any = null
+    public playWs: number = null
+    public charWs: number = null
 
     constructor(uid: number) {
         this.uid = uid
@@ -22,7 +22,12 @@ export class ServiceUser{
      * 加入房间
      */
     public joinInRoom(playRoom: ServicePlayRoom) {
+        const prevPlayRoom = this.playRoom
+        if (prevPlayRoom) { // 如果存在上一个房间则退出
+            prevPlayRoom.out(this)
+        }
         this.playRoom = playRoom
+        playRoom.join(this)
     }
 
     /**

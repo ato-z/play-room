@@ -1,7 +1,17 @@
 import puppeteer from 'puppeteer'
 import {ExceptionACG} from '../exceptions/index'
 import {interfaceACG} from '../interface/interfaceACG'
+import {touchPath} from '../utils/utils'
+import ServiceLog from './ServiceLog'
+ 
+// 如果保存路径不存在则进行创建
+const savePath = `${__dirname}/../../runtime/zerg_acg`
+touchPath(savePath)
 
+class ServiceZergLog extends ServiceLog{
+    // 日志保存的路径
+    static savePath = savePath
+}
 
 /**
  * 解析age.tv站点的详情与视频地址
@@ -74,6 +84,7 @@ export class ServiceACGTV{
             if (!detail.title) { return }
             return detail
           })
+        await browser.close();
         if (detail) { return detail }
         throw new ExceptionACG.NotDetail()
     }
@@ -90,15 +101,35 @@ export class ServiceACGTV{
     static async getPlayLinkByUrl(url: string): Promise<string|never> {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
+        let errorHtml = ''
         try {
             await page.goto(url);
-            const playIFrameSrc = await page.evaluate(() => {
+            const codeResult = await page.evaluate((): Promise<any> => {
                 const iframe = document.querySelector('#age_playfram') as HTMLIFrameElement
-                return iframe.src
+                return new Promise(function(resovle, reject) {
+                    const resultData = {htlm: document.documentElement.innerHTML, src: ''}
+                    Object.defineProperty(iframe, 'src', {
+                        set: function(val) {
+                            resultData.src = val
+                            resovle(resultData)
+                        }
+                    })
+                    if (iframe.src) {
+                        resultData.src = iframe.src
+                        return resovle(resultData)
+                    }
+                    setTimeout(reject, 5000, resultData)
+                })
             })
+            errorHtml = codeResult.html
+            const playIFrameSrc = codeResult.src
+            await browser.close();
             const query = playIFrameSrc.match(/\?url\=(.+$)/)![1]
-            return decodeURIComponent(query)
+            let playUrl = decodeURIComponent(query)
+            playUrl = /\?/.test(playUrl) ? playUrl : playUrl.replace(/(\&.+)$/, '')
+            return playUrl
         } catch(e) {
+            ServiceZergLog.writeToDay(e, errorHtml, Date.now() + encodeURIComponent(url) + '.html')
             throw new ExceptionACG.MissPlayLink()
         }
     }

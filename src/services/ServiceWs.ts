@@ -30,17 +30,17 @@ export class ServiceWs{
      * ```
      */
     static codeSendClientData<T>(data:T, _code?: number): string {
-        const code = _code || 0
+        const code = _code || WS_CODE.MSG
         return JSON.stringify({data, code})
     }
 
     /** 
      * 向所有用户发起广播
      */
-    notify<T>(data: T): void {
+    notify<T>(data: T, code?: number): void {
         const {wss} = this
         wss.clients.forEach(function (ws) {
-            ws.send(ServiceWs.codeSendClientData(data))
+            ws.send(ServiceWs.codeSendClientData(data, code))
         })
     }
 

@@ -1,6 +1,14 @@
 export enum WS_CODE{
 
-    ERROR = -1,
+    ERROR = -1, // 错误信息
 
-    JOIN_ID = 101
+    MSG = 1, // 公告
+
+    JOIN_ID = 101, // 用户创建了wss服务的动作，并返回加入房间的验证信息
+
+    USER_JOIN = 102, // 用户通过校验并加入房间
+
+    USER_OUT = 103, // 用户退出了房间
+
+    SWITCH_PLAY = 201, // 切换播放地址
 }

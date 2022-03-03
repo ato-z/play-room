@@ -1,7 +1,7 @@
 import { GET, POST, route } from "awilix-koa";
 import { Context } from "koa";
 import config from "../../config";
-import { ParamExceotion } from "../../exceptions";
+import { ExceptionRoom, ParamExceotion } from "../../exceptions";
 import { interfaceRoom } from "../../interface/interfaceRoom";
 import { ServicePlayRoom } from "../../services/ServicePlayRoom";
 import { ServiceRoom } from "../../services/ServiceRoom";
@@ -124,11 +124,6 @@ export class RoomController{
     * @apiSuccessExample {type} Success-Response:
     *{
     *    "data": {
-    *        "liIndex": null, // null表示当前没有播放列表
-    *        "itemIndex": null, // 播放列表的下标
-    *        "playLink": null, // 当前房间在播放的视频链接
-    *        "playWs": "wx://127.0.0.1:3002",
-    *        "chatWs": "wx://127.0.0.1:3003",
     *        "id": 1, // 房间id
     *        "title": "房间标题",
     *        "des": "房间描述",
@@ -325,8 +320,7 @@ export class RoomController{
         const userService = await ServiceUser.of(uid)
         const playRoom = await ServicePlayRoom.of(room_id, uid)
         userService.joinInRoom(playRoom) // 当用户调用房间详情时，证明在房间内。自动加入到该房
-        const wss = playRoom.getCurrent(this.codeWsURL(ctx))
-        return Object.assign({}, wss, playRoom.room)
+        return Object.assign({}, playRoom.room)
     }
 
 
@@ -399,15 +393,57 @@ export class RoomController{
         const uid = token.id
         const userService = await ServiceUser.of(uid)
         const {playRoom} = userService
+        if (!playRoom) { throw new ExceptionRoom.NotJoinPlayRoom() }
+        if (!playRoom.chatWs || !playRoom.playWs) { throw new ExceptionRoom.WaitJoin() }
         if (playRoom.chatWs.port === query.port && playRoom.chatWs.wsList[query.id]) {
-            userService.charWs = playRoom.chatWs.wsList[query.id]
+            userService.charWs = query.id
             return {msg: '已加入聊天室'}
         }
         if (playRoom.playWs.port === query.port && playRoom.playWs.wsList[query.id]) {
-            userService.playWs = playRoom.playWs.wsList[query.id]
+            userService.playWs = query.id
             return {msg: '已加入放映厅'}
         }
         throw new ParamExceotion('加入wss服务失败～')
+    }
+
+    /**
+    * @api {POST} /v1/room/switch_play 切换播放视频
+    * @apiName 切换播放视频
+    * @apiGroup Room
+    * @apiVersion 1.0.0
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "token": "通过sign码可换取"
+    * }
+    * 
+    * @apiBody {Number} liIndex   房间播放列表的下标
+    * @apiBody {Number} itemIndex 房间播放列表内的子项下标
+    *  
+    * @apiSuccessExample {type} Success-Response:
+    *{
+    *    "data": {
+    *        "msg": "正在切换"
+    *   },
+    *   "msg": "ok",
+    *   "errorCode": 0
+    * }
+    * */
+    @route('/switch_play')
+    @POST()
+    async switchPlay(ctx: Context) {
+        const query = ctx.bodyJSON  || {} as interfaceRoom.switchPlayQuery
+        if (query.liIndex === undefined) { throw new ParamExceotion('liIndex不能为空') }
+        if (query.itemIndex === undefined) { throw new ParamExceotion('itemIndex不能为空') }
+        const token = ServiceToken.get(ctx.header.token as string)
+        const uid = token.id
+        const userService = await ServiceUser.of(uid)
+        const playRoom = userService.playRoom
+        if (!playRoom) { throw new ParamExceotion('您暂未加入放映厅') }
+        if (playRoom.room.master_id !== uid) { throw new ParamExceotion('只有房主才切换播放') }
+        await playRoom.setPlayIndex(query.liIndex, query.itemIndex)
+        return {msg: '正在切换...'}
     }
 
     /**
