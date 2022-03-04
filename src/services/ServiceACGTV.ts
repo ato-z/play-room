@@ -1,17 +1,10 @@
 import puppeteer from 'puppeteer'
 import {ExceptionACG} from '../exceptions/index'
 import {interfaceACG} from '../interface/interfaceACG'
-import {touchPath} from '../utils/utils'
-import ServiceLog from './ServiceLog'
+import {ServiceHTMLLog} from './ServiceHTMLLog'
  
-// 如果保存路径不存在则进行创建
-const savePath = `${__dirname}/../../runtime/zerg_acg`
-touchPath(savePath)
-
-class ServiceZergLog extends ServiceLog{
-    // 日志保存的路径
-    static savePath = savePath
-}
+// 爬虫html副本保存类
+const zergHTMLLog = new ServiceHTMLLog('zerg_acg')
 
 /**
  * 解析age.tv站点的详情与视频地址
@@ -107,29 +100,32 @@ export class ServiceACGTV{
             const codeResult = await page.evaluate((): Promise<any> => {
                 const iframe = document.querySelector('#age_playfram') as HTMLIFrameElement
                 return new Promise(function(resovle, reject) {
-                    const resultData = {htlm: document.documentElement.innerHTML, src: ''}
                     Object.defineProperty(iframe, 'src', {
                         set: function(val) {
-                            resultData.src = val
-                            resovle(resultData)
+                            resovle(val)
                         }
                     })
-                    if (iframe.src) {
-                        resultData.src = iframe.src
-                        return resovle(resultData)
-                    }
-                    setTimeout(reject, 5000, resultData)
+                    if (iframe.src) { return resovle(iframe.src) }
+                    setTimeout(reject, 5000, new Error('解码失败'))
+                }).then(src => {
+                    return {html: document.documentElement.innerHTML, src}
+                }).catch(error => {
+                    const html = document.documentElement.innerHTML
+                    const src = html.match(/id\=["|']age_playfram["|'] src\=["|']([^\s|.]+)["|']/)[1]
+                    return {html: document.documentElement.innerHTML, src}
                 })
             })
+            
             errorHtml = codeResult.html
             const playIFrameSrc = codeResult.src
             await browser.close();
             const query = playIFrameSrc.match(/\?url\=(.+$)/)![1]
             let playUrl = decodeURIComponent(query)
             playUrl = /\?/.test(playUrl) ? playUrl : playUrl.replace(/(\&.+)$/, '')
+            if (/^http/.test(playUrl) === false) { throw new Error('解析播放连接失败') }
             return playUrl
         } catch(e) {
-            ServiceZergLog.writeToDay(e, errorHtml, Date.now() + encodeURIComponent(url) + '.html')
+            zergHTMLLog.write(e, errorHtml, url)
             throw new ExceptionACG.MissPlayLink()
         }
     }
