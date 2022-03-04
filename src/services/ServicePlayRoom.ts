@@ -55,6 +55,7 @@ export class ServicePlayRoom{
      * 清空销毁房间
      */
     public clear() {
+        clearTimeout(this.unifiedTimeIndex)
         this.users.forEach(user => {
             user.playRoom = null
         })
