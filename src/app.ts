@@ -1,6 +1,6 @@
 import {createContainer, Lifetime} from 'awilix'
 import { scopePerRequest, loadControllers } from 'awilix-koa'
-import exceptionHandle from './exceptions/ExceptionHandle'
+import exceptionHandle from './exceptions/exceptionHandle'
 import withResultHandle from './controller/withResultHandle'
 import withResquestBodyHandle from './controller/withResquestBodyHandle'
 import withTokenHandle from './controller/withTokenHandle'
