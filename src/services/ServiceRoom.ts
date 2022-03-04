@@ -36,6 +36,12 @@ export class ServiceRoom{
         return Object.assign({id: roomID}, data)
     }
 
+    /**
+     * 获取房间详情
+     * @param room_id {number} 房间id
+     * @param current_uid  {number} 当前用户id
+     * @returns 
+     */
     static async get(room_id: number, current_uid: number) {
         const room = await ModelRoom.get(room_id)
         if (room === null) { throw new ExceptionRoom.NotDetail() }
@@ -49,5 +55,12 @@ export class ServiceRoom{
             return data
         }
         throw new ExceptionRoom.NotDetail('数据异常')
+    }
+
+    /**
+     *  关闭房间
+     */
+    static async deleteByID(room_id: number) {
+        return await ModelRoom.delete(room_id)
     }
 }

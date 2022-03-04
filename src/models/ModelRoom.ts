@@ -1,6 +1,6 @@
 import {C, R, U, spotTable} from '../utils/db'
-import { ExceptionUser } from "../exceptions";
 import { interfaceRoom } from '../interface/interfaceRoom';
+import { date } from '../utils/utils';
 const tableRoom = spotTable('room')
 const inserFields =  ['title', 'des', 'open', 'from', 'from_id', 'master_id', 'create_date']
 const [insertRoom] = C(tableRoom, inserFields)
@@ -9,8 +9,6 @@ const [findRoom, filterRoom] = R(tableRoom, {
     field: ['id, title, create_date, des, open, from, from_id, master_id'], // 对查询语句的字段嗮选， 可缺省
     order: ['id DESC'], // 查询结果根据id进行倒序， 可缺省
 })
-
-export {insertRoom, upRoom, findRoom}
 
 export class ModelRoom{
     /**
@@ -39,5 +37,8 @@ export class ModelRoom{
 
     static async get(room_id) {
         return findRoom({id: room_id, delete_date: null})
+    }
+    static async delete(room_id) {
+        return upRoom({delete_date: date('y-m-d h:i:s')}, {id: room_id})
     }
 }

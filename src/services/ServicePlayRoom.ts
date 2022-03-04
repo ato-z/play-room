@@ -1,8 +1,11 @@
+import config from "../config"
 import { ParamExceotion } from "../exceptions"
 import { interfaceRoom } from "../interface/interfaceRoom"
 import { WS_CODE } from "../menu/WS_CODE"
 import { decodeVideoDuration } from "../utils/decodeVideoDuration"
+import { date } from "../utils/utils"
 import { ServiceACGTV } from "./ServiceACGTV"
+import  ServiceLog  from "./ServiceLog"
 import { ServiceRoom } from "./ServiceRoom"
 import { ServiceUser } from "./ServiceUser"
 import { ServiceWs } from "./ServiceWs"
@@ -17,7 +20,9 @@ export class ServicePlayRoom{
     private playLink: string | null = null
     private playStart: Date
     private playDuration: number
-    private users = new WeakSet()
+    private users: Set<ServiceUser> = new Set()
+
+    private unifiedTimeIndex // 向用户广播视频进度的定时器
 
     public playWs: ServiceWs
     public chatWs: ServiceWs
@@ -36,15 +41,27 @@ export class ServicePlayRoom{
         const msg = `${user.udata.nickname} 进入房间`
         this.chatWs.notify({msg}, WS_CODE.USER_JOIN)
     }
-
+    
     /**
      * 退出房间
      */
     public out(user: ServiceUser) {
         this.users.delete(user)
-        const msg = `${user.udata.nickname} 进入房间`
+        const msg = `${user.udata.nickname} 退出房间`
         this.chatWs.notify({msg}, WS_CODE.USER_OUT)
     }
+
+    /**
+     * 清空销毁房间
+     */
+    public clear() {
+        this.users.forEach(user => {
+            user.playRoom = null
+        })
+        this.users = new Set()
+        roomMap.delete(this.room.id)
+    }
+
 
     /**
      * 根据房间id和用户id来对应一个单例实例
@@ -84,7 +101,9 @@ export class ServicePlayRoom{
         const {liIndex, itemIndex, playLink} = this
         const playWs = addrss + this?.playWs?.port
         const chatWs = addrss + this?.chatWs?.port
-        return {liIndex, itemIndex, playLink, playWs, chatWs}
+        const currentDate = new Date().getTime()
+        const startDate = this.playStart ? this.playStart.getTime() : 0
+        return {liIndex, itemIndex, playLink, currentDate, startDate, playWs, chatWs}
     }
     
     /**
@@ -111,7 +130,51 @@ export class ServicePlayRoom{
         this.liIndex = liIndex
         this.itemIndex = itemIndex
         const data = { liIndex, itemIndex, playLink, playStart }
-
+        // 立即广播，切换音频
         this.playWs.notify(data, WS_CODE.SWITCH_PLAY)
+        // 间隔广播当前进度
+        this.unifiedTime()
+    }
+
+    /**
+     * 广播当前的播放进度
+     */
+    private async unifiedTime() {
+        clearTimeout(this.unifiedTimeIndex)
+        const currnet = new Date()
+        const diffTime = this.playDuration - (currnet.getTime() - this.playStart.getTime())
+        
+        if (diffTime < config.playVideoSleep / 1500) { return setTimeout(() => this.nextPlay(), diffTime + config.playVideoSleep) }
+        this.unifiedTimeIndex = setTimeout(() => {
+            try {
+                this.playWs.notify({
+                    currnet: currnet.getTime(),
+                    start: this.playStart.getTime()
+                }, WS_CODE.UNIFIED_PLAY)
+                this.unifiedTime()
+            } catch(e) {}
+        }, config.playVideoSleep);
+    }
+
+    /** 播放下一个 */
+    private async nextPlay() {
+        try {
+            const li = this.room.from_data.list[this.liIndex].li
+            const nextItem = this.itemIndex + 1
+            if (nextItem >= li.length) {
+                this.playWs.notify({
+                    msg: '播放已结束，房间即将销毁'
+                }, WS_CODE.MSG)
+                this.clear()
+                await ServiceRoom.deleteByID(this.room.id) 
+            } else{
+                this.playWs.notify({
+                    msg: '即将播放下一个视频'
+                }, WS_CODE.MSG)
+                await this.setPlayIndex(this.liIndex, nextItem)
+            }
+        } catch(e) {
+            ServiceLog.writeToDay(e, '静默切换视频执行异常')
+        }
     }
 }

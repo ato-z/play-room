@@ -3,6 +3,7 @@ import { Context } from "koa";
 import config from "../../config";
 import { ExceptionRoom, ParamExceotion } from "../../exceptions";
 import { interfaceRoom } from "../../interface/interfaceRoom";
+import { WS_CODE } from "../../menu/WS_CODE";
 import { ServicePlayRoom } from "../../services/ServicePlayRoom";
 import { ServiceRoom } from "../../services/ServiceRoom";
 import { ServiceToken } from "../../services/ServiceToken";
@@ -433,7 +434,7 @@ export class RoomController{
     @route('/switch_play')
     @POST()
     async switchPlay(ctx: Context) {
-        const query = ctx.bodyJSON  || {} as interfaceRoom.switchPlayQuery
+        const query = ctx.bodyJSON || {} as interfaceRoom.switchPlayQuery
         if (query.liIndex === undefined) { throw new ParamExceotion('liIndex不能为空') }
         if (query.itemIndex === undefined) { throw new ParamExceotion('itemIndex不能为空') }
         const token = ServiceToken.get(ctx.header.token as string)
@@ -444,6 +445,83 @@ export class RoomController{
         if (playRoom.room.master_id !== uid) { throw new ParamExceotion('只有房主才切换播放') }
         await playRoom.setPlayIndex(query.liIndex, query.itemIndex)
         return {msg: '正在切换...'}
+    }
+
+    /**
+    * @api {GET} /v1/room/close 关闭房间
+    * @apiName 关闭房间
+    * @apiGroup Room
+    * @apiVersion 1.0.0
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "token": "通过sign码可换取"
+    * }
+    *  
+    * @apiSuccessExample {type} Success-Response:
+    *{
+    *    "data": {
+    *        "msg": "房间已被销毁"
+    *   },
+    *   "msg": "ok",
+    *   "errorCode": 0
+    * }
+    * */
+    @route('/close')
+    @GET()
+    async closeRoom(ctx: Context) {
+        const token = ServiceToken.get(ctx.header.token as string)
+        const uid = token.id
+        const userService = await ServiceUser.of(uid)
+        const playRoom = userService.playRoom
+        if (!playRoom) { throw new ParamExceotion('您暂未加入放映厅') }
+        if (playRoom.room.master_id !== uid) { throw new ParamExceotion('只有房主才可以清空房间') }
+        playRoom.clear()
+        await ServiceRoom.deleteByID(playRoom.room.id)
+        return {msg: '房间已被销毁'}
+    }
+
+    /**
+    * @api {POST} /v1/room/say 用户发言
+    * @apiName 用户发言
+    * @apiGroup Room
+    * @apiVersion 1.0.0
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "token": "通过sign码可换取"
+    * }
+    * 
+    * @apiBody {String} msg 发送的讯息
+    *  
+    * @apiSuccessExample {type} Success-Response:
+    *{
+    *    "data": {
+    *        "msg": "已加入放映厅/聊天室"
+    *   },
+    *   "msg": "ok",
+    *   "errorCode": 0
+    * }
+    * */
+    @route('/say')
+    @POST()
+    async say(ctx: Context) {
+        const query = ctx.bodyJSON || {} as {msg: string}
+        const msg = (query.msg || '').replace(/^\s+|\s+$/g, '')
+        if (msg === '') { throw new ParamExceotion('说点啥吧～') }
+        const token = ServiceToken.get(ctx.header.token as string)
+        const uid = token.id
+        const userService = await ServiceUser.of(uid)
+        const playRoom = userService.playRoom
+        if (!playRoom) { throw new ParamExceotion('您暂未加入放映厅') }
+        const sendData = {
+            nickname: userService.udata.nickname,
+            is_master: playRoom.room.master_id === uid, msg
+        }
+        playRoom.chatWs.notify(sendData, WS_CODE.USER_SAY)
+        return {msg: '就你话多!'}
     }
 
     /**

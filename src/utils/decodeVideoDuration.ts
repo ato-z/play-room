@@ -4,5 +4,5 @@
  * @returns 
  */
 export const decodeVideoDuration = async (url: string) => {
-    return 100
+    return 25 * 60 * 1000
 }

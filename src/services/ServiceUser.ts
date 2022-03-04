@@ -10,7 +10,7 @@ export class ServiceUser{
     public udata: interfaceUser.detail
     private uid: number
     
-    public playRoom: ServicePlayRoom
+    public playRoom: ServicePlayRoom|null = null
     public playWs: number = null
     public charWs: number = null
 
@@ -23,7 +23,7 @@ export class ServiceUser{
      */
     public joinInRoom(playRoom: ServicePlayRoom) {
         const prevPlayRoom = this.playRoom
-        if (prevPlayRoom) { // 如果存在上一个房间则退出
+        if (prevPlayRoom && prevPlayRoom !== playRoom) { // 如果存在上一个房间则退出
             prevPlayRoom.out(this)
         }
         this.playRoom = playRoom

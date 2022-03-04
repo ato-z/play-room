@@ -23,7 +23,9 @@ export module interfaceRoom{
 
     export interface wsStatuProp extends statuProp{
         playWs: string;
-        chatWs: string
+        chatWs: string;
+        currentDate: number;
+        startDate: number;
     }
 
     export interface createProp{

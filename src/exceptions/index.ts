@@ -79,7 +79,7 @@ export namespace ExceptionUser{
 export namespace ExceptionRoom{
     export class NotDetail extends BaseExceotion{
         code = 400
-        msg = '嗨呀～内容跑掉了'
+        msg = '房间不存在或已被删除'
         errorCode = 50100
     }
 

@@ -28,6 +28,9 @@ export default {
     // 加密用的hash
     hash: 'yFan',
 
+    // 视频进度广播的间隔
+    playVideoSleep: 15000,
+
     /** 数据库配置 */
     database: {
         // 数据库地址
