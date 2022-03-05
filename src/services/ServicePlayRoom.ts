@@ -130,7 +130,7 @@ export class ServicePlayRoom{
         this.playDuration = playDuration
         this.liIndex = liIndex
         this.itemIndex = itemIndex
-        const data = { liIndex, itemIndex, playLink, playStart }
+        const data = { liIndex, itemIndex, playLink, playStart: playStart.getTime() }
         // 立即广播，切换音频
         this.playWs.notify(data, WS_CODE.SWITCH_PLAY)
         // 间隔广播当前进度
