@@ -7,7 +7,7 @@ import {exec} from 'child_process'
  * decodeDateToTime('00:22:52.10') // => 1372010
  * ```
  */
-const decodeDateToTime = (date: string) => {
+const decodeDateToTime = (date: string): number => {
     const [times, ms] = date.split('.')
     const vals = times.split(':')
     let val = parseInt(ms) || 0
@@ -28,7 +28,7 @@ const decodeDateToTime = (date: string) => {
  * @param url 
  * @returns 
  */
-export const decodeVideoDuration = async (url: string) => {
+export const decodeVideoDuration = async (url: string): Promise<number> => {
     return new Promise((resovle, reject) => {
         exec(`ffmpeg -i ${url}`, function(err, stdout, stderr){
             let duration: any = null
@@ -48,5 +48,5 @@ export const decodeVideoDuration = async (url: string) => {
             }
             reject(new Error('解析失败'))
         })
-    }).catch(() => 120 * 60 * 1000)
+    }).catch(() => 120 * 60 * 1000).then(val => val as number)
 }
