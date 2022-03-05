@@ -111,8 +111,11 @@ export class ServiceACGTV{
                     return {html: document.documentElement.innerHTML, src}
                 }).catch(error => {
                     const html = document.documentElement.innerHTML
-                    const src = html.match(/id\=["|']age_playfram["|'] src\=["|']([^\s|.]+)["|']/)[1]
-                    return {html: document.documentElement.innerHTML, src}
+                    const src = html.match(/id\=["|']age_playfram["|'] src\=["|']([^\s|.]+)["|']/)
+                    if (src !== null) {
+                        return {html: document.documentElement.innerHTML, src: src[1]} 
+                    }
+                    return {html: document.documentElement.innerHTML, src: ''}
                 })
             })
             

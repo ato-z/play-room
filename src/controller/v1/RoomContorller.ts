@@ -94,7 +94,7 @@ export class RoomController{
     @route('/new')
     @POST()
     async create(ctx: Context) {
-        const query = ctx.bodyJSON as interfaceRoom.createProp
+        const query: Record<string, any> = ctx.bodyJSON || {}
         const keys = ['title', 'des', 'from', 'from_id', 'open']
         keys.forEach(key => {
             if (!query[key]) { throw new ParamExceotion(key + '不能为空') }
@@ -102,7 +102,7 @@ export class RoomController{
         const token = ServiceToken.get(ctx.header.token as string)
         const data: interfaceRoom.detail = Object.assign({
             master_id: token.id,
-        }, query)
+        }, query as interfaceRoom.createProp)
         const newRoom = await ServiceRoom.create(data)
         return newRoom
     }
@@ -530,7 +530,8 @@ export class RoomController{
      * @returns 
      */
     private codeWsURL(ctx: Context): string {
-        const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)[1] || config.runIp
-        return `ws://${domain}:`
+        const domain = (ctx.header.host || '').match(/^(.+)(\:\d+)$/)
+        if (domain !== null) { return `ws://${domain[1]}:` }
+        return `ws://${config.runIp}:`
     }
 }

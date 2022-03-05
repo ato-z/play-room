@@ -12,7 +12,7 @@ export class MediaController{
      * 验证视频的from是否在爬虫列表中
      * @param _from 
      */
-    private hasInVideoFrom(_from): void|never {
+    private hasInVideoFrom(_from: number): void|never {
         if (VIDEO_FROM[_from] === undefined) {
             throw new ParamExceotion('暂不支持from=' + _from + '的数据')
         }
