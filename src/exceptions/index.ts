@@ -38,7 +38,7 @@ export namespace ExceptionUser{
     }
 
     export class MissUser extends BaseExceotion{
-        code = 403
+        code = 400
         msg = '当前sign已失效,请重新登录～'
         errorCode = 20200
     }
@@ -50,7 +50,7 @@ export namespace ExceptionUser{
  export namespace ExceptionToken{
 
     export class Miss extends BaseExceotion{
-        code = 403
+        code = 400
         msg = '当前token不存在或已过期'
         errorCode = 30100;
     }
@@ -84,7 +84,7 @@ export namespace ExceptionRoom{
     }
 
     export class NotJoinPlayRoom extends BaseExceotion{
-        code = 403
+        code = 400
         msg = '未加入放映厅'
         errorCode = 50200
     }
