@@ -22,7 +22,7 @@ export class ServicePlayRoom{
     private playDuration: number
     private users: Set<ServiceUser> = new Set()
 
-    private unifiedTimeIndex // 向用户广播视频进度的定时器
+    private unifiedTimeIndex: NodeJS.Timeout // 向用户广播视频进度的定时器
 
     public playWs: ServiceWs
     public chatWs: ServiceWs
