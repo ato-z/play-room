@@ -160,7 +160,7 @@ export class ServicePlayRoom{
     /** 播放下一个 */
     private async nextPlay() {
         try {
-            if (this.liIndex === null) { return }
+            if (this.liIndex === null || this.itemIndex === null) { return }
             const li = this.room.from_data.list[this.liIndex].li
             const nextItem = this.itemIndex + 1
             if (nextItem >= li.length) {
