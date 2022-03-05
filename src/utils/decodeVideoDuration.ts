@@ -31,10 +31,16 @@ const decodeDateToTime = (date: string) => {
 export const decodeVideoDuration = async (url: string) => {
     return new Promise((resovle, reject) => {
         exec(`ffmpeg -i ${url}`, function(err, stdout, stderr){
-            if (err) { reject(err) }
-            var reslut = stderr.toString();
-            const regDuration =/Duration\: ([0-9\:\.]+),/;
-            const duration = regDuration.exec(reslut); 
+            let duration: any = null
+            if (err !== null) {
+                const regDuration =/Duration\: ([0-9\:\.]+),/
+                duration = regDuration.exec(err.message)
+                if (duration == null) { return reject(err) }
+            } else {
+                const reslut = stderr.toString();
+                const regDuration =/Duration\: ([0-9\:\.]+),/
+                duration = regDuration.exec(reslut)
+            }
             if(duration !== null){
                 var dateStr = duration[1];
                 //获得时长
