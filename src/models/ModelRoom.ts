@@ -10,6 +10,16 @@ const [findRoom, filterRoom] = R(tableRoom, {
     order: ['id DESC'], // 查询结果根据id进行倒序， 可缺省
 })
 
+interface ResultSetHeader{
+    fieldCount: number;
+    affectedRows: number,
+    insertId: number,
+    info: string,
+    serverStatus: number,
+    warningStatus: number,
+    changedRows:number
+}
+
 export class ModelRoom{
     /**
      * @param where {object} 查询条件 {open: '1'}
@@ -32,13 +42,13 @@ export class ModelRoom{
     }
 
     static async create(data: interfaceRoom.detail) {
-        return insertRoom(data).then(result => result.insertId)
+        return insertRoom(data).then((result: ResultSetHeader) => result.insertId)
     }
 
-    static async get(room_id) {
+    static async get(room_id: number) {
         return findRoom({id: room_id, delete_date: null})
     }
-    static async delete(room_id) {
+    static async delete(room_id: number) {
         return upRoom({delete_date: date('y-m-d h:i:s')}, {id: room_id})
     }
 }

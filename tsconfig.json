@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
-        "noImplicitThis": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
         "strictNullChecks": true,
 
         "experimentalDecorators": true,
@@ -9,5 +9,5 @@
 
         "moduleResolution": "Node"
     },
-    "include": ["src/*", "code/*", "declare-d.ts"]
+    "include": ["declare.d.ts", "src/*"]
 }

@@ -8,7 +8,7 @@ let start = config.wxStartPort
 export class ServiceWs{
     static portOpen: {[propName: string]: boolean} = {}
     public port: number
-    public wsList = []
+    public wsList: any[] = []
     private wss: typeof WebSocketServer
     private setIntervalIndex: NodeJS.Timer
 

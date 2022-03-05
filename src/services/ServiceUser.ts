@@ -11,8 +11,8 @@ export class ServiceUser{
     private uid: number
     
     public playRoom: ServicePlayRoom|null = null
-    public playWs: number = null
-    public charWs: number = null
+    public playWs: number|null = null
+    public charWs: number|null = null
 
     constructor(uid: number) {
         this.uid = uid
