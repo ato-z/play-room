@@ -18,7 +18,7 @@ export class ServiceRoom{
      *  const rooms2 = ModelRoom.select({open: '1'}, 10, 10) // 从下标为10开始获取10条
      * ```
      */
-    static async getList(start, count) {
+    static async getList(start: number, count: number) {
         const list = await ModelRoom.select({
             open: ROOM_OPEN.PUBLIC
         }, start, count)
