@@ -14,7 +14,7 @@ import { ParamExceotion } from "../../exceptions";
 export class UserController{
     
     /**
-    * @api {GET} /v1/users/temporary 注册临时用户
+    * @api {GET} /v1/user/temporary 注册临时用户
     * @apiName 注册临时用户
     * @apiGroup User
     * @apiVersion 1.0.0
@@ -44,7 +44,7 @@ export class UserController{
     }
 
     /**
-    * @api {POST} /v1/users/upname 更新用户昵称
+    * @api {POST} /v1/user/upname 更新用户昵称
     * @apiName 更新用户昵称
     * @apiGroup User
     * @apiVersion 1.0.0
