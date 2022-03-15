@@ -1,4 +1,5 @@
 import { Context } from "koa";
+import config from "../config";
 
 /**
  * 最终返回的结果进行统一格式返回
@@ -27,6 +28,7 @@ export default async(ctx: Context, next: () => {}) => {
         content.data = result
         if (result.length === 0) { code = 204 }
     }
+    
     ctx.set('content-type', 'application/json')
     ctx.body = JSON.stringify(content)
     ctx.status = code

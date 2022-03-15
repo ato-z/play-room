@@ -45,6 +45,12 @@ app.use(loadControllers(`${__dirname}/controller/*/*.ts`, {
     }
 }))
 
+// 未查询到的路由返回404
+app.use((ctx) => {
+    ctx.state = 404
+    ctx.body = '{"msg": "404 NOT FOUND", errorCode: 999}'
+})
+
 const ip: string = config.runIp
 const port: number = config.runPort
 app.listen(port, ip, () => {

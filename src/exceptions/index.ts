@@ -21,7 +21,7 @@ export class BaseExceotion extends Error{
  export class ParamExceotion extends BaseExceotion{
     msg = '参数校验异常'
     errorCode = 10000
-    code = 400
+    code = 200
 }
 
 
@@ -38,7 +38,7 @@ export namespace ExceptionUser{
     }
 
     export class MissUser extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '当前sign已失效,请重新登录～'
         errorCode = 20200
     }
@@ -50,7 +50,7 @@ export namespace ExceptionUser{
  export namespace ExceptionToken{
 
     export class Miss extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '当前token不存在或已过期'
         errorCode = 30100;
     }
@@ -61,13 +61,13 @@ export namespace ExceptionUser{
  */
  export namespace ExceptionACG{
     export class NotDetail extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '嗨呀～内容跑掉了'
         errorCode = 40100
     }
 
     export class MissPlayLink extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '嗨呀～播放链接不见了'
         errorCode = 40101
     }
@@ -78,19 +78,19 @@ export namespace ExceptionUser{
  */
 export namespace ExceptionRoom{
     export class NotDetail extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '房间不存在或已被删除'
         errorCode = 50100
     }
 
     export class NotJoinPlayRoom extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '未加入放映厅'
         errorCode = 50200
     }
 
     export class WaitJoin extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '放映厅正在初始化中...请稍后'
         errorCode = 50201
     }
@@ -101,7 +101,7 @@ export namespace ExceptionRoom{
  */
 export namespace ExceptionWSS{
     export class MaxConnect extends BaseExceotion{
-        code = 400
+        code = 200
         msg = '当前房间已达上限'
         errorCode = 60000
     }
