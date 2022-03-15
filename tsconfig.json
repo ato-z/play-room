@@ -7,7 +7,9 @@
         "experimentalDecorators": true,
         "esModuleInterop": true,
 
+        "outDir": "./zerg/",
+
         "moduleResolution": "Node"
     },
-    "include": ["declare.d.ts", "src/*"]
+    "include": ["declare.d.ts", "src/*", "src/*/*/*"]
 }
