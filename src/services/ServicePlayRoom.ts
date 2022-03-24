@@ -1,10 +1,8 @@
 import config from "../config"
 import { ParamExceotion } from "../exceptions"
-import { interfaceRoom } from "../interface/interfaceRoom"
+import { InterfaceRoom } from "../interface/InterfaceRoom"
 import { WS_CODE } from "../menu/WS_CODE"
 import { decodeVideoDuration } from "../utils/decodeVideoDuration"
-import { date } from "../utils/utils"
-import { ServiceACGTV } from "./ServiceACGTV"
 import  ServiceLog  from "./ServiceLog"
 import { ServiceRoom } from "./ServiceRoom"
 import { ServiceUser } from "./ServiceUser"
@@ -13,7 +11,7 @@ import { ServiceWs } from "./ServiceWs"
 const roomMap = new Map()
 export class ServicePlayRoom{
 
-    public room: interfaceRoom.detailForm<any>
+    public room: InterfaceRoom.detailForm<any>
 
     private liIndex: number| null = null
     private itemIndex: number | null = null
@@ -27,7 +25,7 @@ export class ServicePlayRoom{
     public playWs: ServiceWs
     public chatWs: ServiceWs
 
-    constructor(room: interfaceRoom.detailForm<any>, playWs: ServiceWs, chatWs: ServiceWs) {
+    constructor(room: InterfaceRoom.detailForm<any>, playWs: ServiceWs, chatWs: ServiceWs) {
         this.room = room
         this.playWs = playWs
         this.chatWs = chatWs
@@ -98,7 +96,7 @@ export class ServicePlayRoom{
      * console.log(playRoom.getCurrent('ws://127.0.0.1')) // ws://127.0.0.1:3002
      * ```
      */
-    public getCurrent(addrss: string): interfaceRoom.wsStatuProp {
+    public getCurrent(addrss: string): InterfaceRoom.wsStatuProp {
         const {liIndex, itemIndex, playLink} = this
         const playWs = addrss + this?.playWs?.port
         const chatWs = addrss + this?.chatWs?.port
@@ -120,7 +118,7 @@ export class ServicePlayRoom{
         
         // 解码播放链接
         const encodeLink = item.li[itemIndex].href
-        const playLink = await ServiceACGTV.getPlayLinkByUrl(encodeLink)
+        const playLink = await ServiceRoom.getPlayUrl(~~room.from, encodeLink)
         const playDuration = await decodeVideoDuration(playLink)
         const playStart = new Date()
 

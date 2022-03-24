@@ -1,7 +1,7 @@
 import config from "../config"
 import { ExceptionWSS } from "../exceptions"
 import { WS_CODE } from "../menu/WS_CODE"
-const {WebSocketServer} = require('ws')
+import { WebSocketServer } from 'ws'
 
 let start = config.wxStartPort
 
@@ -9,7 +9,7 @@ export class ServiceWs{
     static portOpen: {[propName: string]: boolean} = {}
     public port: number
     public wsList: any[] = []
-    private wss: typeof WebSocketServer
+    private wss: WebSocketServer
     private setIntervalIndex: NodeJS.Timer
 
     constructor() {
@@ -39,7 +39,7 @@ export class ServiceWs{
      */
     notify<T>(data: T, code?: number): void {
         const {wss} = this
-        wss.clients.forEach(function (ws) {
+        wss.clients.forEach( (ws) => {
             ws.send(ServiceWs.codeSendClientData(data, code))
         })
     }
@@ -50,13 +50,13 @@ export class ServiceWs{
     private init() {
         const {wss, wsList, port} = this
         /** 每次链接成功后 */
-        wss.on('connection',  ws => {
+        wss.on('connection',  (ws: any) => {
             /** 监听用户发送的信息 */
             this.onMeassage(ws)
 
             /** 标记活动用户 */
             ws.on('pong', function () {
-                this.isAlive = true
+                Reflect.set(ws, 'isAlive', true)
             })
             const linkNum = this.wsList.length
             wsList.push(ws)
@@ -66,30 +66,32 @@ export class ServiceWs{
         })
         
         /** 发送心跳包 */
-        this.setIntervalIndex = setInterval(function ping() {
+        const IntervalHandle = () => {
+            clearTimeout(this.setIntervalIndex)
             wss.clients.forEach(function (ws) {
-              if (ws.isAlive === false) return ws.terminate()
-              ws.isAlive = false
-              ws.ping()
-            });
-        }, 30000)
+                if (Reflect.get(ws, 'isAlive').isAlive === false) { return ws.terminate() }
+                Reflect.set(ws, 'isAlive', false )
+                ws.ping()
+            })
+            this.setIntervalIndex = setTimeout(IntervalHandle, 30000)
+        }
+        IntervalHandle()
 
         /** 服务关闭时 */
         wss.on('close',  () =>{
-            clearInterval(this.setIntervalIndex)
+            clearTimeout(this.setIntervalIndex)
         })
     }
 
-    private onMeassage(ws) {
-        ws.on('message', function(data) {
+    private onMeassage(ws: WebSocket) {
+        ws.onmessage = function(data) {
             try {
-                const codeData = JSON.parse(data)
+                const codeData = JSON.parse(data as unknown as string)
                 if (codeData.target === undefined) { throw new Error('target不能为空') }
-                console.log(codeData)
             } catch(error) {
                 ws.send(ServiceWs.codeSendClientData({msg: error.message}, WS_CODE.ERROR))
             }
-        })
+        }
     }
 
     /**

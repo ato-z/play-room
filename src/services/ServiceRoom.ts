@@ -1,11 +1,12 @@
-import { ExceptionRoom } from "../exceptions";
-import { interfaceACG } from "../interface/interfaceACG";
-import { interfaceRoom } from "../interface/interfaceRoom";
-import { ROOM_FROM } from "../menu/ROOM_FROM";
-import { ROOM_OPEN } from "../menu/ROOM_OPEN";
-import { ModelRoom } from "../models/ModelRoom";
+import { ExceptionRoom } from "../exceptions"
+import { InterfaceZerg } from "../Interface/InterfaceZerg"
+import { InterfaceRoom } from "../interface/InterfaceRoom"
+import { ROOM_OPEN } from "../menu/ROOM_OPEN"
+import { ROOM_FROM } from "../menu/ROOM_FROM"
+import { ModelRoom } from "../models/ModelRoom"
 import {date} from '../utils/utils'
-import { ServiceACGTV } from "./ServiceACGTV";
+import { getZergDetail, getZergPlayUrl } from '../zerg/index'
+
 
 export class ServiceRoom{
 
@@ -28,9 +29,9 @@ export class ServiceRoom{
     /**
      * 创建房间
      * @param data 
-     * @returns interfaceRoom.detail 
+     * @returns InterfaceRoom.detail 
      */
-    static async create(data: interfaceRoom.detail): Promise<interfaceRoom.detail> {
+    static async create(data: InterfaceRoom.detail): Promise<InterfaceRoom.detail> {
         data.create_date = date('y-m-d h:i:s')
         const roomID = await ModelRoom.create(data)
         return Object.assign({id: roomID}, data)
@@ -46,19 +47,36 @@ export class ServiceRoom{
         const room = await ModelRoom.get(room_id)
         if (room === null) { throw new ExceptionRoom.NotDetail() }
         const {title, des, create_date, open, id, master_id} = room
+        const _from = ~~room.from
         const is_master = master_id === current_uid
-        if (room.from === ROOM_FROM.AGETV) {
-            const from_data = await ServiceACGTV.getDetailById(room.from_id)
-            const data:interfaceRoom.detailForm<interfaceACG.acgDetail> = {
-                id, master_id, is_master, title, des, open, create_date, from_data
-            }
-            return data
+        let from_data
+        if (_from === ROOM_FROM.ONLINE) {// 一个播放链接
+            from_data = await getZergDetail(_from, room.from_id)
+        } else {
+            from_data = await getZergDetail(_from, room.from_id)
         }
-        throw new ExceptionRoom.NotDetail('数据异常')
+        if (from_data === null) { throw new ExceptionRoom.NotDetail('数据异常') }
+        const data:InterfaceRoom.detailForm<InterfaceZerg.Detail> = {
+            id: id as number, master_id, is_master, from: _from, title, des, open, create_date: create_date as string, from_data
+        }
+        return data
     }
 
     /**
-     *  关闭房间
+     * 播放链接
+     * @param form 
+     * @param targetUrl
+     * @returns 
+     */
+    static async getPlayUrl(from: number, targetUrl: string): Promise<string> {
+        let playUrl = await getZergPlayUrl(from, targetUrl)
+        if (playUrl === null) { throw new ExceptionRoom.MissPlayLink() }
+        return playUrl
+    }
+
+
+    /**
+     * 关闭房间
      */
     static async deleteByID(room_id: number) {
         return await ModelRoom.delete(room_id)

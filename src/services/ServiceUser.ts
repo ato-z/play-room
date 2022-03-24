@@ -1,14 +1,17 @@
 import shajs from 'sha.js'
-import { interfaceUser } from '../interface/interfacaUser'
+import { InterfaceUser } from '../interface/InterfacaUser'
 import { ModelUser } from '../models/ModelUser'
 import config from '../config'
 import { ExceptionUser } from '../exceptions'
 import { ServicePlayRoom } from './ServicePlayRoom'
 
 const userMap = new Map()
+const modelUser = new ModelUser('user')
+
 export class ServiceUser{
-    public udata: interfaceUser.detail
+    public udata: InterfaceUser.Detail
     private uid: number
+    static userModel: ModelUser = modelUser
     
     public playRoom: ServicePlayRoom|null = null
     public playWs: number|null = null
@@ -34,7 +37,7 @@ export class ServiceUser{
      * 初始化方法
      */
     protected async init() {
-        const udata = await ModelUser.find(this.uid)
+        const udata = await modelUser.get(this.uid)
         this.udata = udata 
     }
 
@@ -59,8 +62,8 @@ export class ServiceUser{
      * const udata = ServiceUser.get(1) // 获取用户id为1的数据
      * ```
      */
-    static get(uid: number): Promise<interfaceUser.detail|never>{
-        return ModelUser.find(uid)
+    static get(uid: number): Promise<InterfaceUser.Detail|never>{
+        return this.userModel.get(uid)
     }
 
     /**
@@ -72,8 +75,8 @@ export class ServiceUser{
      * ServiceUser.upData(1, {nickname: '修改昵称'})
      * ```
      */
-    static upData(uid: number, updata: Partial<interfaceUser.detail>): void{
-        return ModelUser.updata({id: uid}, updata)
+    static upData(uid: number, updata: Partial<InterfaceUser.Detail>) {
+        return this.userModel.update(updata, { and: {id: uid} })
     }
 
     /**
@@ -95,8 +98,9 @@ export class ServiceUser{
      * @param udata 
      * @returns 用户的新增id
      */
-    static async createUser(udata: interfaceUser.detail): Promise<interfaceUser.detail> {
-        const id = await ModelUser.insertUser(udata)
+    static async createUser(udata: InterfaceUser.Detail): Promise<InterfaceUser.Detail> {
+        const resultHeader = await this.userModel.insert(udata)
+        const id = resultHeader.insertId
         const _udata = Object.assign({id}, udata)
         return _udata
     }
@@ -104,7 +108,7 @@ export class ServiceUser{
     /**
      * 用户登录密钥
      */
-    static codeLoginSign(udata: interfaceUser.detail): string{
+    static codeLoginSign(udata: InterfaceUser.Detail): string{
         const hash = config.hash
         const id = udata.id as number
         const pass = udata.password.replace(/g/ig, '')
@@ -117,7 +121,7 @@ export class ServiceUser{
     /**
      * 解密登录密钥
      */
-    static async decodeLoginSign(sign: string): Promise<interfaceUser.detail|never>{
+    static async decodeLoginSign(sign: string): Promise<InterfaceUser.Detail|never>{
         const hash = config.hash
         const codeSign = sign.split('g')
         if (codeSign.length !== 4) { throw new ExceptionUser.MissSign('无效的sign码') }
@@ -131,11 +135,11 @@ export class ServiceUser{
         // 还原用户id
         const _codeId: number = parseInt('0x' + codeId)
         const _keyIndex: number = parseInt('0x' + keyIndex)
-        const hashVal = this.charCodeVal(hash)
+        const hashVal = ServiceUser.charCodeVal(hash)
         const uid: number = (_codeId - hashVal) / _keyIndex
         
         // 对用户身份进行校验
-        const udata = await ModelUser.find(uid)
+        const udata = await this.userModel.get(uid)
         if (udata.password !== pass) { throw new ExceptionUser.MissSign('密码已被更改') }
         return udata
     }

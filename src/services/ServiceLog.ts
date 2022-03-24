@@ -1,4 +1,4 @@
-import {writeFile} from 'fs';
+import {writeFile} from 'fs'
 import {touchPath} from '../utils/utils'
 
 // 如果保存路径不存在则进行创建
@@ -8,7 +8,7 @@ touchPath(savePath)
 /**
  * 简单的日志写入类
  */
-export default class ServiceLog {
+ export default class ServiceLog {
 
     // 日志保存的路径
     static savePath = savePath

@@ -1,56 +1,40 @@
 import {createContainer, Lifetime} from 'awilix'
 import { scopePerRequest, loadControllers } from 'awilix-koa'
-import exceptionHandle from './exceptions/exceptionHandle'
-import withResultHandle from './controller/withResultHandle'
-import withResquestBodyHandle from './controller/withResquestBodyHandle'
-import withTokenHandle from './controller/withTokenHandle'
+import { middWareCrossDomain } from './middleware/middWareCrossDomain'
+import { middWareEmpty } from './middleware/middWareEmpty'
+import { middWareException } from './middleware/middWareException'
+import { middWareToken } from './middleware/middWareToken'
+import { middWareResquestBody } from './middleware/middWareResquestBody'
+import { middWareResult } from './middleware/middWareResult'
 import Koa from 'koa'
 import config from './config'
 
-const app = new Koa() 
+const app = new Koa()
 
-// 开启跨域
-app.use(async (ctx, next) => {
-    if (config.crossDomain) {
-        ctx.set('Access-Control-Allow-Origin', '*');
-        ctx.set('Access-Control-Allow-Headers', '*');
-        ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    }
-    await next()
-})
+/** 中间件处理流程 */
+app.use(middWareCrossDomain) // 跨域
+app.use(middWareException) // 异常
+app.use(middWareToken) // 异常
+app.use(middWareResquestBody) // 请求体
+app.use(middWareResult) // 返回格式
 
-// 异常捕获
-app.use(exceptionHandle)
-
-// 请求体处理
-app.use(withResquestBodyHandle)
-
-// 登录校验
-app.use(withTokenHandle)
-
-// 统一返回的数据格式类型
-app.use(withResultHandle)
-
+/** ioc */
 // 创建容器
 const contriller = createContainer()
-
 // 路由注入容器中
 app.use(scopePerRequest(contriller))
-
 // 加载控制器路由
-app.use(loadControllers(`${__dirname}/controller/*/*.ts`, {
+app.use(loadControllers(`${__dirname}/controller/*/*`, {
     formatName: 'camelCase',
     resolverOptions: {
         lifetime: Lifetime.SINGLETON
     }
 }))
 
-// 未查询到的路由返回404
-app.use((ctx) => {
-    ctx.state = 404
-    ctx.body = '{"msg": "404 NOT FOUND", errorCode: 999}'
-})
+/** 404 放置最后 */
+app.use(middWareEmpty)
 
+/** 开启服务 */
 const ip: string = config.runIp
 const port: number = config.runPort
 app.listen(port, ip, () => {

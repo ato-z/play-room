@@ -1,5 +1,5 @@
-export module interfaceToken{
-    export interface detail{
+export module InterfaceToken{
+    export interface Detail{
         id: number;
         level: number;
         nickname: string;

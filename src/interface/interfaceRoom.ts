@@ -1,4 +1,4 @@
-export module interfaceRoom{
+export module InterfaceRoom{
 
     export interface listQuery{
         start: string;
@@ -44,13 +44,14 @@ export module interfaceRoom{
     }
 
     export interface detailForm<T>{
-        id: number,
-        title: string;
-        des: string;
-        master_id: number,
-        is_master: boolean,
-        create_date: string;
-        open: string;
+        id: number
+        title: string
+        des: string
+        master_id: number
+        is_master: boolean
+        create_date: string
+        open: string
+        from: number
         from_data: T
     }
 }

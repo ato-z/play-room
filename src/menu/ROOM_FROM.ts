@@ -1,3 +1,5 @@
 export enum ROOM_FROM{
-    AGETV = 1
+    ONLINE = 0,
+    AGETV = 1,
+    MALI_MALI = 2
 }

@@ -1,15 +1,18 @@
 {
     "compilerOptions": {
         "noImplicitAny": false,
-        "noImplicitThis": false,
+        "noImplicitThis": true,
         "strictNullChecks": true,
 
         "experimentalDecorators": true,
         "esModuleInterop": true,
 
-        "outDir": "./zerg/",
+        "outDir": "./dist/",
+
+        "types": ["node"],
 
         "moduleResolution": "Node"
     },
-    "include": ["declare.d.ts", "src/*", "src/*/*/*"]
+    "include": ["src/*", "src/*/*/*"],
+    "exclude": ["node_modules"]
 }

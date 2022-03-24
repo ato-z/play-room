@@ -1,26 +1,22 @@
-import {C, R, U, spotTable} from '../utils/db'
-import { interfaceRoom } from '../interface/interfaceRoom';
-import { date } from '../utils/utils';
-const tableRoom = spotTable('room')
-const inserFields =  ['title', 'des', 'open', 'from', 'from_id', 'master_id', 'create_date']
-const [insertRoom] = C(tableRoom, inserFields)
-const [upRoom] = U(tableRoom)
-const [findRoom, filterRoom] = R(tableRoom, {
-    field: ['id, title, create_date, des, open, from, from_id, master_id'], // 对查询语句的字段嗮选， 可缺省
-    order: ['id DESC'], // 查询结果根据id进行倒序， 可缺省
-})
 
-interface ResultSetHeader{
-    fieldCount: number;
-    affectedRows: number,
-    insertId: number,
-    info: string,
-    serverStatus: number,
-    warningStatus: number,
-    changedRows:number
-}
 
-export class ModelRoom{
+import { BaseModel } from './BaseModel'
+import { InterfaceRoom } from '../interface/InterfaceRoom'
+import { date } from '../utils/utils'
+import { OP } from 'mysql-curd'
+
+export class ModelRoom extends BaseModel{
+
+    protected tableName: string = 'room'
+
+    static instance: ModelRoom
+
+    static getInstance() {
+        if (this.instance) { return this.instance }
+        this.instance = new ModelRoom('room')
+        return this.instance
+    }
+
     /**
      * @param where {object} 查询条件 {open: '1'}
      * @param start {number} 从第几条开始
@@ -31,24 +27,35 @@ export class ModelRoom{
      *  const rooms2 = ModelRoom.select({open: '1'}, 10, 10) // 从下标为10开始获取10条
      * ```
      */
-    static async select(where: object = {},start: number, end?: number): Promise< null | interfaceRoom.detail[] > {
+    static async select(where: object = {},start: number, end?: number): Promise< null | InterfaceRoom.detail[] > {
         if (end === undefined) {
             end = start
             start = 0
         }
-        return filterRoom(Object.assign({
-            delete_date: null
-        }, where), null, [start, end]) as interfaceRoom.detail[]
+        const modelRoom = this.getInstance()
+        const outDate = Date.now() - 2 * 24 * 3600 * 1000
+        return modelRoom.selete({
+            and: Object.assign(
+                {
+                    delete_date: null,
+                    create_date: [OP.GT, date('y-m-d h:i:s', new Date(outDate))]
+                }, where),
+            limit: [start, end]
+        })
     }
 
-    static async create(data: interfaceRoom.detail) {
-        return insertRoom(data).then((result: ResultSetHeader) => result.insertId)
+    static async create(data: InterfaceRoom.detail) {
+        const modelRoom = this.getInstance()
+        return modelRoom.insert(data).then(res => res.insertId)
     }
 
     static async get(room_id: number) {
-        return findRoom({id: room_id, delete_date: null})
+        const modelRoom = this.getInstance()
+        return modelRoom.find<InterfaceRoom.detail>(room_id)
     }
+
     static async delete(room_id: number) {
-        return upRoom({delete_date: date('y-m-d h:i:s')}, {id: room_id})
+        const modelRoom = this.getInstance()
+        modelRoom.update({delete_date: date('y-m-d h:i:s')}, {and: {id: room_id}})
     }
 }

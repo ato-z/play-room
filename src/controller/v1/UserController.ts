@@ -1,6 +1,6 @@
 import { POST, GET, route } from "awilix-koa";
 import { Context } from "koa";
-import { interfaceUser } from "../../interface/interfacaUser";
+import { InterfaceUser } from "../../interface/InterfacaUser";
 import { randomName, date } from "../../utils/utils";
 import {USER_LEVEL} from '../../menu/USER_LEVEL';
 import {ServiceUser} from '../../services/ServiceUser';
@@ -32,7 +32,7 @@ export class UserController{
     @GET()
     async autoRegister(): Promise<{sign: string}>{
         const password = ServiceUser.codePassword(`${Date.now()}${Math.random()}`)
-        const userData: interfaceUser.detail = {
+        const userData: InterfaceUser.Detail = {
             nickname: randomName(),
             level: USER_LEVEL.TEMPRORAAY,
             create_date: date('y-m-d h:i:s'),
@@ -40,7 +40,41 @@ export class UserController{
         }
         const udata = await ServiceUser.createUser(userData)
         const sign = ServiceUser.codeLoginSign(udata)
-        return { sign: sign }
+        return { sign }
+    }
+
+    /**
+    * @api {GET} /v1/user/detail 获取用户信息
+    * @apiName 获取用户信息
+    * @apiGroup User
+    * @apiVersion 1.0.0
+    * 
+    * @apiSuccess  {Number} code 成功时返回 200
+    * @apiHeaderExample {json} Header-Example:
+    * {
+    *   "content-type": "application/json",
+    *   "token": "通过sign码可换取"
+    * }
+    * @apiSuccessExample {type} Success-Response:
+    * {
+    *      msg: 'ok',
+    *      data: {
+    *           "id": 1,
+    *           "nickname": "用户昵称",
+    *           "level": -1,
+    *           "create_date": "2022-03-23T03:57:27.000Z"
+    *      },
+    *      errorCode: 0
+    * }
+    */
+    @route('/detail')
+    @GET()
+    async detail(ctx: Context): Promise<Partial<InterfaceUser.Detail>>{
+        const token = ServiceToken.get(ctx.header.token as string)
+        const userData:Partial<InterfaceUser.Detail> = await ServiceUser.get(token.id) 
+        delete userData.password
+        delete userData.delele_date
+        return userData
     }
 
     /**
@@ -70,10 +104,11 @@ export class UserController{
     async upname(ctx: Context) {
         const body = ctx.bodyJSON
         if (!body?.nickname) { throw new ParamExceotion('nickname不能为空') }
-        if (/^(.{1,8})$/.test(body.nickname) === false) { throw new ParamExceotion(' nickname字数必须大于0且小于9') }
+        const nickname = body.nickname
+        if (/^(.{1,8})$/.test(nickname) === false) { throw new ParamExceotion(' nickname字数必须大于0且小于9') }
         const token = ServiceToken.get(ctx.header.token as string)
-        const changedRows = await ServiceUser.upData(token.id, {nickname: body.nickname})
-        return {changedRows}
+        await ServiceUser.upData(token.id, {nickname})
+        return {nickname}
     }
 
 }

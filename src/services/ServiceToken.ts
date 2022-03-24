@@ -1,9 +1,11 @@
-import { interfaceUser } from "../interface/interfacaUser";
+import { InterfaceUser } from "../interface/InterfacaUser";
 import shajs from 'sha.js'
-import { interfaceToken } from "../interface/interfaceToken";
+import { InterfaceToken } from "../interface/InterfaceToken";
 import config from "../config"
 import { ExceptionToken } from "../exceptions";
+import { ModelUser } from "../models/ModelUser";
 const loginMap = new Map()
+const modelUser = new ModelUser('user')
 
 export class ServiceToken{
 
@@ -12,7 +14,7 @@ export class ServiceToken{
      * @param token {string} token键
      * @returns 
      */
-    static get(token: string): interfaceToken.detail|never{
+    static get(token: string): InterfaceToken.Detail|never{
         this.hasIn(token)
         return loginMap.get(token)
     }
@@ -29,18 +31,18 @@ export class ServiceToken{
 
     /**
      * 用户登录到token，返回token到密钥
-     * @param udata {interfaceUser.detail} 用户信息
+     * @param udata {InterfaceUser.Detail} 用户信息
      * @returns 一串不等长的密钥
      * ```
      * const udata = await ModuleUser.find(1)
      * ServiceToken.login(udata) // tokenKey => 1as14as14aaeef11454646456462164
      * ```
      */
-    static login(udata: interfaceUser.detail): string{
+    static login(udata: InterfaceUser.Detail): string{
         const {id, level, nickname} = udata
         const tokenKey = this.codeTokenKey(udata)
         const current = Date.now()
-        const tokenDatail: interfaceToken.detail = {
+        const tokenDatail: InterfaceToken.Detail = {
             id: id as number, level, nickname,
             exp_time: config.expTime + current
         }
@@ -50,14 +52,14 @@ export class ServiceToken{
 
     /**
      * 根据用户特征来返回一段token密钥
-     * @param udata {interfaceUser.detail} 用户信息
+     * @param udata {InterfaceUser.Detail} 用户信息
      * @returns 一串不等长的密钥
      * ```
      * const udata = await ModuleUser.find(1)
      * ServiceToken.codeTokenKey(udata) // tokenKey => 1as14as14aaeef11454646456462164
      * ```
      */
-    static codeTokenKey(udata: interfaceUser.detail): string{
+    static codeTokenKey(udata: InterfaceUser.Detail): string{
         const currnt = Date.now()
         return new shajs.sha256()
         .update(`${currnt}${udata.id}`)

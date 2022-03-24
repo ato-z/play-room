@@ -1,9 +1,11 @@
-import { GET, POST, route } from "awilix-koa";
-import { Context } from "koa";
-import { ParamExceotion } from "../../exceptions";
-import {interfaceMedia} from "../../interface/interfaceMedia";
-import { VIDEO_FROM } from "../../menu/VIDEO_FROM";
-import { ServiceACGTV } from "../../services/ServiceACGTV";
+import { GET, POST, route } from "awilix-koa"
+import { Context } from "koa"
+import { ParamExceotion } from "../../exceptions"
+import {interfaceMedia} from "../../interface/interfaceMedia"
+import { date } from "../../utils/utils"
+import { getZergDetail, getZergPlayUrl } from '../../zerg/index'
+import {ModelOnline} from '../../models/ModelOnline'
+import { ROOM_FROM } from "../../menu/ROOM_FROM"
 
 @route('/v1/media')
 export class MediaController{
@@ -13,7 +15,7 @@ export class MediaController{
      * @param _from 
      */
     private hasInVideoFrom(_from: number): void|never {
-        if (VIDEO_FROM[_from] === undefined) {
+        if (ROOM_FROM[_from] === undefined) {
             throw new ParamExceotion('暂不支持from=' + _from + '的数据')
         }
     }
@@ -97,10 +99,8 @@ export class MediaController{
         const video_id = parseInt(query.video_id)
         this.hasInVideoFrom(_from)
         if (!video_id) { throw new ParamExceotion('video_id不能为空') }
-        // 从https://www.agemys.com 解析获取
-        if (_from === VIDEO_FROM.AGETV) {
-            return ServiceACGTV.getDetailById(video_id)
-        }
+        const data = await getZergDetail(_from, video_id)
+        return data
     }
 
     /**
@@ -133,9 +133,20 @@ export class MediaController{
         const _from = parseInt(query.from)
         this.hasInVideoFrom(_from)
         if (!query.target) { throw new ParamExceotion('target不能为空') }
-        if (_from === VIDEO_FROM.AGETV) {
-            const link = await ServiceACGTV.getPlayLinkByUrl(query.target)
-            return { link }
-        }
+        const data = await getZergPlayUrl(_from, query.target)
+        return data
+    }
+
+    @route('/add')
+    @POST()
+    async add(ctx: Context) {
+        const query = ctx.bodyJSON as {list: Array<string> }
+        const list = (query?.list || [])
+        if (list.length === 0) { throw new ParamExceotion('list不能为空') }
+        const li = list.join(',')
+        const create_date = date('y-m-d h:i:s')
+        const modelOnlie = new ModelOnline('online')
+        const res = await modelOnlie.insert({li, create_date})
+        return {id: res.insertId}
     }
 }

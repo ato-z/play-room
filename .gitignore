@@ -1,7 +1,1 @@
 node_modules
-runtime/*
-coverage
-doc
-dist
-apidoc
-.vscode

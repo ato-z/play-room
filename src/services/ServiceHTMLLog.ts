@@ -1,12 +1,8 @@
-import {date, touchPath} from '../utils/utils'
+import {touchPath} from '../utils/utils'
 import {writeFile} from 'fs'
 
-// 如果保存路径不存在则进行创建
-const savePath = `${__dirname}/../../runtime/zerg_acg`
-
-
 export class ServiceHTMLLog {
-    private savePath = `${__dirname}/../../runtime/`
+    private savePath = `${__dirname}/../../runtime/zerg/acg`
     constructor(path: string) {
         this.savePath += path
         touchPath(this.savePath)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <video id="play" controls></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        var videoSrc = 'https://service-i86gk1am-1251249846.gz.apigw.tencentcs.com/pay/hlsjiami/1648093686/5374a9778d65b2419c59536c43582ceb/2139/15.m3u8'
+        //var videoSrc = 'https://service-i86gk1am-1251249846.gz.apigw.tencentcs.com/pay/hlsjiami/1648093686/5374a9778d65b2419c59536c43582ceb/2139/15.m3u8'
+        var video = document.querySelector('#play')
+        if (Hls.isSupported()) {
+            console.log(111)
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            console.dir(video)
+        }else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        }
+    </script>
+</body>
+</html>

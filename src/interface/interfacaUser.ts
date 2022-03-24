@@ -1,5 +1,5 @@
-export module interfaceUser {
-    export interface detail{
+export module InterfaceUser {
+    export interface Detail{
         id?: number;
         nickname: string;
         level: number;
