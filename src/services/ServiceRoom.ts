@@ -49,12 +49,7 @@ export class ServiceRoom{
         const {title, des, create_date, open, id, master_id} = room
         const _from = ~~room.from
         const is_master = master_id === current_uid
-        let from_data
-        if (_from === ROOM_FROM.ONLINE) {// 一个播放链接
-            from_data = await getZergDetail(_from, room.from_id)
-        } else {
-            from_data = await getZergDetail(_from, room.from_id)
-        }
+        let from_data = await getZergDetail(_from, room.from_id)
         if (from_data === null) { throw new ExceptionRoom.NotDetail('数据异常') }
         const data:InterfaceRoom.detailForm<InterfaceZerg.Detail> = {
             id: id as number, master_id, is_master, from: _from, title, des, open, create_date: create_date as string, from_data

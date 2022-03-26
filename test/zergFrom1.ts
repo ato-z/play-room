@@ -6,7 +6,5 @@ const zergAcg = new ZergACGTV()
 //zergAcg.getDetailById(detailId).then(console.log)
 
 
-//const playUrl = 'https://www.agemys.com/play/20210253?playid=4_1'
+//const playUrl = 'https://www.agemys.com/play/20190120?playid=3_1'
 //zergAcg.getPlayLinkByUrl(playUrl).then(console.log)
-
-

@@ -7,6 +7,15 @@ import { ExceptionZerg } from "../exceptions"
 
 // 爬虫html副本保存类
 const zergHTMLLog = new ServiceHTMLLog('zerg/www_malimali3_com')
+
+// 从html副本中匹配src
+const decodeSrcByHtml = (html: string): string => {
+    const reg = /(?<=<td id="playleft".+?<iframe.+?src=")(.+?)(?=")/
+    const match = html.match(reg)
+    if (match === null) { return '' }
+    return match[0]
+}
+
 /**
  * 解析malimali站点的详情与视频地址
  * 主站：https://www.malimali3.com/
@@ -67,11 +76,12 @@ export class ZergMaliMali extends BaseZerg{
         let errorHtml = ''
         try {
             const pageView1 = await getPlayIframeSrc(page, url, '#playleft iframe')
-            if (pageView1.src === '') { throw new Error('获取播放链接失败') }
             errorHtml = pageView1.html
+            const src = pageView1.src || decodeSrcByHtml(pageView1.html)
+            console.log('src', src)
             await browser.close()
-            if (pageView1.src === '') { throw new ExceptionZerg.MissPlayLink() }
-            const objLi: any = decodeURIComponent(pageView1.src).split(/[\?|\&]/).map(item => item.split('=')[1])
+            if (src === '') { throw new ExceptionZerg.MissPlayLink() }
+            const objLi: string[] = src.split(/[\?|\&]/).map(item => item.split('=')[1])
             return objLi[1]
         } catch(e) {
             zergHTMLLog.write(e, errorHtml, url)

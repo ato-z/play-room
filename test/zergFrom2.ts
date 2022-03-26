@@ -1,3 +1,4 @@
+import { match } from 'assert'
 import { ZergMaliMali } from '../src/zerg/ZergMaliMali'
 
 const zergMaliMali = new ZergMaliMali()
@@ -7,5 +8,5 @@ const detailId = 1358
 // })
 
 
-const playUrl = 'https://www.malimali3.com/play/1358-1-14.html'
+const playUrl = 'https://www.malimali3.com/play/1779-1-13.html'
 zergMaliMali.getPlayLinkByUrl(playUrl).then(console.log)

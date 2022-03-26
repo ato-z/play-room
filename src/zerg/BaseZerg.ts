@@ -18,10 +18,9 @@ export const getPlayIframeSrc = async (page: puppeteer.Page, url: string, select
         const iframe = document.querySelector(selectors) as HTMLIFrameElement
         return new Promise(function(resovle, reject) {
             const startDate = Date.now()
-            console.log(iframe) 
             const getSrc = () => {
                 if (iframe.src) { return resovle(iframe.src) }
-                if (Date.now() - startDate > 3000) {
+                if (Date.now() - startDate > 1000) {
                     reject(new Error('网络超时'))
                 } else {
                     requestAnimationFrame(getSrc)
