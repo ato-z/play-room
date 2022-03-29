@@ -10,6 +10,8 @@ export enum WS_CODE{
 
     USER_OUT = 103, // 用户退出了房间
 
+    BEFORE_SWITCH_PLAY = 200, // 预备播放地址
+
     SWITCH_PLAY = 201, // 切换播放地址
 
     UNIFIED_PLAY = 202, // 统一播放进度

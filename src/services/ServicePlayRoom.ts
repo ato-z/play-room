@@ -115,7 +115,15 @@ export class ServicePlayRoom{
         if (liIndex > room.from_data.list.length) { throw new ParamExceotion('list索引超出边界') }
         const item = room.from_data.list[liIndex]
         if (itemIndex > item.li.length) { throw new ParamExceotion('item索引超出边界') }
-        
+
+        // 给用户切换预告
+        try {
+            this.playWs.notify({
+                msg: '即将播放下一集...'
+            }, WS_CODE.BEFORE_SWITCH_PLAY)
+            this.unifiedTime()
+        } catch(e) {}
+
         // 解码播放链接
         const encodeLink = item.li[itemIndex].href
         const playLink = await ServiceRoom.getPlayUrl(~~room.from, encodeLink)

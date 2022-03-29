@@ -14,7 +14,7 @@ const app = new Koa()
 /** 中间件处理流程 */
 app.use(middWareCrossDomain) // 跨域
 app.use(middWareException) // 异常
-app.use(middWareToken) // 异常
+app.use(middWareToken) // token处理
 app.use(middWareResquestBody) // 请求体
 app.use(middWareResult) // 返回格式
 

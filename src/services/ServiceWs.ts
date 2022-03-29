@@ -56,7 +56,7 @@ export class ServiceWs{
 
             /** 标记活动用户 */
             ws.on('pong', function () {
-                Reflect.set(ws, 'isAlive', true)
+                if (ws) { Reflect.set(ws, 'isAlive', true) }
             })
             const linkNum = this.wsList.length
             wsList.push(ws)
