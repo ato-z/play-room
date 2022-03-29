@@ -39,7 +39,6 @@ exports.__esModule = true;
 exports.ServiceRoom = void 0;
 var exceptions_1 = require("../exceptions");
 var ROOM_OPEN_1 = require("../menu/ROOM_OPEN");
-var ROOM_FROM_1 = require("../menu/ROOM_FROM");
 var ModelRoom_1 = require("../models/ModelRoom");
 var utils_1 = require("../utils/utils");
 var index_1 = require("../zerg/index");
@@ -110,16 +109,9 @@ var ServiceRoom = /** @class */ (function () {
                         title = room.title, des = room.des, create_date = room.create_date, open = room.open, id = room.id, master_id = room.master_id;
                         _from = ~~room.from;
                         is_master = master_id === current_uid;
-                        if (!(_from === ROOM_FROM_1.ROOM_FROM.ONLINE)) return [3 /*break*/, 3];
                         return [4 /*yield*/, (0, index_1.getZergDetail)(_from, room.from_id)];
                     case 2:
                         from_data = _a.sent();
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, (0, index_1.getZergDetail)(_from, room.from_id)];
-                    case 4:
-                        from_data = _a.sent();
-                        _a.label = 5;
-                    case 5:
                         if (from_data === null) {
                             throw new exceptions_1.ExceptionRoom.NotDetail('数据异常');
                         }

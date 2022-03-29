@@ -52,7 +52,9 @@ var ServiceWs = /** @class */ (function () {
             _this.onMeassage(ws);
             /** 标记活动用户 */
             ws.on('pong', function () {
-                Reflect.set(ws, 'isAlive', true);
+                if (ws) {
+                    Reflect.set(ws, 'isAlive', true);
+                }
             });
             var linkNum = _this.wsList.length;
             wsList.push(ws);

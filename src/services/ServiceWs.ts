@@ -69,7 +69,7 @@ export class ServiceWs{
         const IntervalHandle = () => {
             clearTimeout(this.setIntervalIndex)
             wss.clients.forEach(function (ws) {
-                if (Reflect.get(ws, 'isAlive').isAlive === false) { return ws.terminate() }
+                if (Reflect.get(ws, 'isAlive') === false) { return ws.terminate() }
                 Reflect.set(ws, 'isAlive', false )
                 ws.ping()
             })

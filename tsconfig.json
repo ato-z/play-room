@@ -9,6 +9,8 @@
 
         "outDir": "./dist/",
 
+        "module": "commonjs",
+
         "types": ["node"],
 
         "moduleResolution": "Node"

@@ -55,12 +55,11 @@ var getPlayIframeSrc = function (page, url, selectors) { return __awaiter(void 0
                         var iframe = document.querySelector(selectors);
                         return new Promise(function (resovle, reject) {
                             var startDate = Date.now();
-                            console.log(iframe);
                             var getSrc = function () {
                                 if (iframe.src) {
                                     return resovle(iframe.src);
                                 }
-                                if (Date.now() - startDate > 3000) {
+                                if (Date.now() - startDate > 1000) {
                                     reject(new Error('网络超时'));
                                 }
                                 else {

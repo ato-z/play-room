@@ -57,7 +57,11 @@ export class ZergMaliMali extends BaseZerg{
             if (!detail.title) { return }
             return detail
         })
-        if (detail !== undefined) { return detail }
+        
+        if (detail !== undefined) {
+            detail.poster = '/v1/media/img?target=' + encodeURIComponent(detail.poster)
+            return detail
+        }
         throw new ExceptionZerg.NotDetail()
     }
 
@@ -78,7 +82,6 @@ export class ZergMaliMali extends BaseZerg{
             const pageView1 = await getPlayIframeSrc(page, url, '#playleft iframe')
             errorHtml = pageView1.html
             const src = pageView1.src || decodeSrcByHtml(pageView1.html)
-            console.log('src', src)
             await browser.close()
             if (src === '') { throw new ExceptionZerg.MissPlayLink() }
             const objLi: string[] = src.split(/[\?|\&]/).map(item => item.split('=')[1])

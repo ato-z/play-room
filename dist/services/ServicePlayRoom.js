@@ -158,6 +158,14 @@ var ServicePlayRoom = /** @class */ (function () {
                         if (itemIndex > item.li.length) {
                             throw new exceptions_1.ParamExceotion('item索引超出边界');
                         }
+                        // 给用户切换预告
+                        try {
+                            this.playWs.notify({
+                                msg: '即将播放下一集...'
+                            }, WS_CODE_1.WS_CODE.BEFORE_SWITCH_PLAY);
+                            this.unifiedTime();
+                        }
+                        catch (e) { }
                         encodeLink = item.li[itemIndex].href;
                         return [4 /*yield*/, ServiceRoom_1.ServiceRoom.getPlayUrl(~~room.from, encodeLink)];
                     case 1:

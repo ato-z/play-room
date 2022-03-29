@@ -61,6 +61,15 @@ var ServiceHTMLLog_1 = require("../services/ServiceHTMLLog");
 var exceptions_1 = require("../exceptions");
 // 爬虫html副本保存类
 var zergHTMLLog = new ServiceHTMLLog_1.ServiceHTMLLog('zerg/www_malimali3_com');
+// 从html副本中匹配src
+var decodeSrcByHtml = function (html) {
+    var reg = /(?<=<td id="playleft".+?<iframe.+?src=")(.+?)(?=")/;
+    var match = html.match(reg);
+    if (match === null) {
+        return '';
+    }
+    return match[0];
+};
 /**
  * 解析malimali站点的详情与视频地址
  * 主站：https://www.malimali3.com/
@@ -133,7 +142,7 @@ var ZergMaliMali = /** @class */ (function (_super) {
     };
     ZergMaliMali.prototype.getPlayLinkByUrl = function (url) {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, errorHtml, pageView1, objLi, e_1;
+            var browser, page, errorHtml, pageView1, src, objLi, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, puppeteer_1["default"].launch({
@@ -160,17 +169,16 @@ var ZergMaliMali = /** @class */ (function (_super) {
                         return [4 /*yield*/, (0, BaseZerg_1.getPlayIframeSrc)(page, url, '#playleft iframe')];
                     case 5:
                         pageView1 = _a.sent();
-                        if (pageView1.src === '') {
-                            throw new Error('获取播放链接失败');
-                        }
                         errorHtml = pageView1.html;
+                        src = pageView1.src || decodeSrcByHtml(pageView1.html);
+                        console.log('src', src);
                         return [4 /*yield*/, browser.close()];
                     case 6:
                         _a.sent();
-                        if (pageView1.src === '') {
+                        if (src === '') {
                             throw new exceptions_1.ExceptionZerg.MissPlayLink();
                         }
-                        objLi = decodeURIComponent(pageView1.src).split(/[\?|\&]/).map(function (item) { return item.split('=')[1]; });
+                        objLi = src.split(/[\?|\&]/).map(function (item) { return item.split('=')[1]; });
                         return [2 /*return*/, objLi[1]];
                     case 7:
                         e_1 = _a.sent();

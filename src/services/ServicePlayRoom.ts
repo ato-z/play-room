@@ -1,5 +1,5 @@
 import config from "../config"
-import { ParamExceotion } from "../exceptions"
+import { ExceptionRoom, ParamExceotion } from "../exceptions"
 import { InterfaceRoom } from "../interface/InterfaceRoom"
 import { WS_CODE } from "../menu/WS_CODE"
 import { decodeVideoDuration } from "../utils/decodeVideoDuration"
@@ -127,6 +127,7 @@ export class ServicePlayRoom{
         // 解码播放链接
         const encodeLink = item.li[itemIndex].href
         const playLink = await ServiceRoom.getPlayUrl(~~room.from, encodeLink)
+        if (playLink === undefined) { throw new ExceptionRoom.MissPlayLink() }
         const playDuration = await decodeVideoDuration(playLink)
         const playStart = new Date()
 
@@ -149,6 +150,7 @@ export class ServicePlayRoom{
     private async unifiedTime() {
         clearTimeout(this.unifiedTimeIndex)
         const currnet = new Date()
+        this.playStart = this.playStart || new Date()
         const diffTime = this.playDuration - (currnet.getTime() - this.playStart.getTime())
         
         if (diffTime < config.playVideoSleep / 1500) { return setTimeout(() => this.nextPlay(), diffTime + config.playVideoSleep) }

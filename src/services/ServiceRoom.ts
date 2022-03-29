@@ -2,7 +2,6 @@ import { ExceptionRoom } from "../exceptions"
 import { InterfaceZerg } from "../Interface/InterfaceZerg"
 import { InterfaceRoom } from "../interface/InterfaceRoom"
 import { ROOM_OPEN } from "../menu/ROOM_OPEN"
-import { ROOM_FROM } from "../menu/ROOM_FROM"
 import { ModelRoom } from "../models/ModelRoom"
 import {date} from '../utils/utils'
 import { getZergDetail, getZergPlayUrl } from '../zerg/index'

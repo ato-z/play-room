@@ -17,7 +17,7 @@ var app = new koa_1["default"]();
 /** 中间件处理流程 */
 app.use(middWareCrossDomain_1.middWareCrossDomain); // 跨域
 app.use(middWareException_1.middWareException); // 异常
-app.use(middWareToken_1.middWareToken); // 异常
+app.use(middWareToken_1.middWareToken); // token处理
 app.use(middWareResquestBody_1.middWareResquestBody); // 请求体
 app.use(middWareResult_1.middWareResult); // 返回格式
 /** ioc */
