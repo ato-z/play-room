@@ -4,10 +4,11 @@ exports["default"] = {
     // 服务器的ip地址，如果是线上服务器。写入线上服务器的ip
     //runIp: '127.0.0.1',
     runIp: '172.245.59.163',
+    root: __dirname,
     // 服务器端口
     runPort: 3001,
     // 开启debug调试，发生异常不会隐藏写入日志。而是直接抛出
-    debug: true,
+    debug: false,
     // 是否允许跨域
     crossDomain: true,
     // 用户登录密钥有效期， 登录密钥可换取token。 单位毫秒

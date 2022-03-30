@@ -65,7 +65,7 @@ var ServiceWs = /** @class */ (function () {
         var IntervalHandle = function () {
             clearTimeout(_this.setIntervalIndex);
             wss.clients.forEach(function (ws) {
-                if (Reflect.get(ws, 'isAlive').isAlive === false) {
+                if (Reflect.get(ws, 'isAlive') === false) {
                     return ws.terminate();
                 }
                 Reflect.set(ws, 'isAlive', false);

@@ -1,12 +1,24 @@
+import config from "../config"
 import { InterfaceZerg } from "../Interface/InterfaceZerg"
 import { ROOM_FROM } from "../menu/ROOM_FROM"
 import { ModelOnline } from "../models/ModelOnline"
-import { ZergACGTV } from "./ZergACGTV"
-import { ZergMaliMali } from "./ZergMaliMali"
+import { exec } from "child_process"
+import { ExceptionZerg } from "../exceptions"
 
-const ACGTV = new ZergACGTV()
-const MALI_MALI = new ZergMaliMali()
 const modelOnlie = new ModelOnline('online')
+
+const cacheCmd = new Map()
+const callCmd = (cmd, err): Promise<string> => {
+    if (cacheCmd.has(cmd)) { return Promise.resolve(cacheCmd.get(cmd)) }
+    return new Promise((resolve, reject) => {
+        exec(cmd, (_err, stdout, stderr) => {
+            if (_err || stdout === '') { reject(err) } 
+            const result = stdout.replace(/^\s+|\s+$|\n/gm, '')
+            cacheCmd.set(cmd, result)
+            resolve(result)
+        })
+    })
+}
 
 export const getZergDetail = async (from: number, from_id: string|number): Promise<InterfaceZerg.Detail|null> => {
     let from_data: InterfaceZerg.Detail|null = null
@@ -18,10 +30,16 @@ export const getZergDetail = async (from: number, from_id: string|number): Promi
         }
     }
     if (from === ROOM_FROM.AGETV) {
-        from_data = await ACGTV.getDetailById(from_id)
+        const dir = [config.root, '../scripts/fromAcgTVFan.js'].join('\/')
+        const cmd = `node ${dir} ${from_id}` 
+        const dataJSON = await callCmd(cmd, ExceptionZerg.MissPlayLink)
+        from_data = JSON.parse(dataJSON) as unknown as InterfaceZerg.Detail
     }
     if (from === ROOM_FROM.MALI_MALI) {
-        from_data = await MALI_MALI.getDetailById(from_id)
+        const dir = [config.root, '../scripts/fromMaliMaliFan.js'].join('\/')
+        const cmd = `node ${dir} ${from_id}` 
+        const dataJSON = await callCmd(cmd, ExceptionZerg.MissPlayLink)
+        from_data = JSON.parse(dataJSON) as unknown as InterfaceZerg.Detail
     }
     return from_data
 }
@@ -30,10 +48,14 @@ export const getZergPlayUrl = async (from: number, tagerUrl: string): Promise<st
     let playUrl : string|null = null
     if (from === ROOM_FROM.ONLINE) { return tagerUrl }
     if (from === ROOM_FROM.AGETV) {
-        playUrl = await ACGTV.getPlayLinkByUrl(tagerUrl)
+        const dir = [config.root, '../scripts/fromAcgTVFan.js'].join('\/')
+        const cmd = `node ${dir} ${tagerUrl}` 
+        playUrl = await callCmd(cmd, ExceptionZerg.MissPlayLink)
     }
     if (from === ROOM_FROM.MALI_MALI) {
-        playUrl = await MALI_MALI.getPlayLinkByUrl(tagerUrl)
+        const dir = [config.root, '../scripts/fromMaliMaliFan.js'].join('\/')
+        const cmd = `node ${dir} ${tagerUrl}` 
+        playUrl = await callCmd(cmd, ExceptionZerg.MissPlayLink)
     }
     return playUrl
 }

@@ -44,7 +44,7 @@ var middWareToken = function (ctx, next) { return __awaiter(void 0, void 0, void
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                fillterRouter = /(token\/get\b)|(user\/temporary\b)/i;
+                fillterRouter = /(token\/get\b)|(user\/temporary\b))/i;
                 if (!(fillterRouter.test(ctx.url) === true)) return [3 /*break*/, 2];
                 return [4 /*yield*/, next()];
             case 1: return [2 /*return*/, _a.sent()];

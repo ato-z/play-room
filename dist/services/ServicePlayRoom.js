@@ -170,6 +170,9 @@ var ServicePlayRoom = /** @class */ (function () {
                         return [4 /*yield*/, ServiceRoom_1.ServiceRoom.getPlayUrl(~~room.from, encodeLink)];
                     case 1:
                         playLink = _a.sent();
+                        if (playLink === undefined) {
+                            throw new exceptions_1.ExceptionRoom.MissPlayLink();
+                        }
                         return [4 /*yield*/, (0, decodeVideoDuration_1.decodeVideoDuration)(playLink)];
                     case 2:
                         playDuration = _a.sent();
@@ -200,6 +203,7 @@ var ServicePlayRoom = /** @class */ (function () {
             return __generator(this, function (_a) {
                 clearTimeout(this.unifiedTimeIndex);
                 currnet = new Date();
+                this.playStart = this.playStart || new Date();
                 diffTime = this.playDuration - (currnet.getTime() - this.playStart.getTime());
                 if (diffTime < config_1["default"].playVideoSleep / 1500) {
                     return [2 /*return*/, setTimeout(function () { return _this.nextPlay(); }, diffTime + config_1["default"].playVideoSleep)];

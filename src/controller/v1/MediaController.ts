@@ -6,6 +6,7 @@ import { date } from "../../utils/utils"
 import { getZergDetail, getZergPlayUrl } from '../../zerg/index'
 import {ModelOnline} from '../../models/ModelOnline'
 import { ROOM_FROM } from "../../menu/ROOM_FROM"
+import http from 'http'
 
 @route('/v1/media')
 export class MediaController{

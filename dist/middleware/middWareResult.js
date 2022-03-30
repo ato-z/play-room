@@ -48,14 +48,16 @@ var middWareResult = function (ctx, next) { return __awaiter(void 0, void 0, voi
             case 0: return [4 /*yield*/, next()];
             case 1:
                 result = _a.sent();
-                content = {
-                    data: result,
-                    msg: 'ok',
-                    errorCode: 0
-                };
-                ctx.set('content-type', 'application/json');
-                ctx.body = JSON.stringify(content);
-                ctx.status = 200;
+                if (ctx.status === 404) {
+                    content = {
+                        data: result,
+                        msg: 'ok',
+                        errorCode: 0
+                    };
+                    ctx.set('content-type', 'application/json');
+                    ctx.body = JSON.stringify(content);
+                    ctx.status = 200;
+                }
                 return [2 /*return*/];
         }
     });

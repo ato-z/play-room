@@ -35,17 +35,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 exports.getZergPlayUrl = exports.getZergDetail = void 0;
+var config_1 = __importDefault(require("../config"));
 var ROOM_FROM_1 = require("../menu/ROOM_FROM");
 var ModelOnline_1 = require("../models/ModelOnline");
-var ZergACGTV_1 = require("./ZergACGTV");
-var ZergMaliMali_1 = require("./ZergMaliMali");
-var ACGTV = new ZergACGTV_1.ZergACGTV();
-var MALI_MALI = new ZergMaliMali_1.ZergMaliMali();
+var child_process_1 = require("child_process");
+var exceptions_1 = require("../exceptions");
 var modelOnlie = new ModelOnline_1.ModelOnline('online');
+var cacheCmd = new Map();
+var callCmd = function (cmd, err) {
+    if (cacheCmd.has(cmd)) {
+        return Promise.resolve(cacheCmd.get(cmd));
+    }
+    return new Promise(function (resolve, reject) {
+        (0, child_process_1.exec)(cmd, function (_err, stdout, stderr) {
+            if (_err || stdout === '') {
+                reject(err);
+            }
+            var result = stdout.replace(/^\s+|\s+$|\n/gm, '');
+            cacheCmd.set(cmd, result);
+            resolve(result);
+        });
+    });
+};
 var getZergDetail = function (from, from_id) { return __awaiter(void 0, void 0, void 0, function () {
-    var from_data, list;
+    var from_data, list, dir, cmd, dataJSON, dir, cmd, dataJSON;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -61,15 +79,21 @@ var getZergDetail = function (from, from_id) { return __awaiter(void 0, void 0, 
                 _a.label = 2;
             case 2:
                 if (!(from === ROOM_FROM_1.ROOM_FROM.AGETV)) return [3 /*break*/, 4];
-                return [4 /*yield*/, ACGTV.getDetailById(from_id)];
+                dir = [config_1["default"].root, '../scripts/fromAcgTVFan.js'].join('\/');
+                cmd = "node ".concat(dir, " ").concat(from_id);
+                return [4 /*yield*/, callCmd(cmd, exceptions_1.ExceptionZerg.MissPlayLink)];
             case 3:
-                from_data = _a.sent();
+                dataJSON = _a.sent();
+                from_data = JSON.parse(dataJSON);
                 _a.label = 4;
             case 4:
                 if (!(from === ROOM_FROM_1.ROOM_FROM.MALI_MALI)) return [3 /*break*/, 6];
-                return [4 /*yield*/, MALI_MALI.getDetailById(from_id)];
+                dir = [config_1["default"].root, '../scripts/fromMaliMaliFan.js'].join('\/');
+                cmd = "node ".concat(dir, " ").concat(from_id);
+                return [4 /*yield*/, callCmd(cmd, exceptions_1.ExceptionZerg.MissPlayLink)];
             case 5:
-                from_data = _a.sent();
+                dataJSON = _a.sent();
+                from_data = JSON.parse(dataJSON);
                 _a.label = 6;
             case 6: return [2 /*return*/, from_data];
         }
@@ -77,7 +101,7 @@ var getZergDetail = function (from, from_id) { return __awaiter(void 0, void 0, 
 }); };
 exports.getZergDetail = getZergDetail;
 var getZergPlayUrl = function (from, tagerUrl) { return __awaiter(void 0, void 0, void 0, function () {
-    var playUrl;
+    var playUrl, dir, cmd, dir, cmd;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -86,13 +110,17 @@ var getZergPlayUrl = function (from, tagerUrl) { return __awaiter(void 0, void 0
                     return [2 /*return*/, tagerUrl];
                 }
                 if (!(from === ROOM_FROM_1.ROOM_FROM.AGETV)) return [3 /*break*/, 2];
-                return [4 /*yield*/, ACGTV.getPlayLinkByUrl(tagerUrl)];
+                dir = [config_1["default"].root, '../scripts/fromAcgTVFan.js'].join('\/');
+                cmd = "node ".concat(dir, " ").concat(tagerUrl);
+                return [4 /*yield*/, callCmd(cmd, exceptions_1.ExceptionZerg.MissPlayLink)];
             case 1:
                 playUrl = _a.sent();
                 _a.label = 2;
             case 2:
                 if (!(from === ROOM_FROM_1.ROOM_FROM.MALI_MALI)) return [3 /*break*/, 4];
-                return [4 /*yield*/, MALI_MALI.getPlayLinkByUrl(tagerUrl)];
+                dir = [config_1["default"].root, '../scripts/fromMaliMaliFan.js'].join('\/');
+                cmd = "node ".concat(dir, " ").concat(tagerUrl);
+                return [4 /*yield*/, callCmd(cmd, exceptions_1.ExceptionZerg.MissPlayLink)];
             case 3:
                 playUrl = _a.sent();
                 _a.label = 4;
