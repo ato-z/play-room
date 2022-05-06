@@ -2,6 +2,8 @@ import config from "../config"
 import { InterfaceZerg } from "../Interface/InterfaceZerg"
 import { ROOM_FROM } from "../menu/ROOM_FROM"
 import { ModelOnline } from "../models/ModelOnline"
+import './ZergACGTV'
+import './ZergMaliMali'
 import { exec } from "child_process"
 import { ExceptionZerg } from "../exceptions"
 

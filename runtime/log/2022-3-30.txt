@@ -1,0 +1,85 @@
+2022/3/30 12:36:26 
+GET /v1/media/video?from=2&video_id=22487
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:37:3 
+GET /v1/media/video?from=2&video_id=1779
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:37:4 
+GET /v1/media/video?from=1&video_id=20070012
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:37:6 
+GET /v1/media/video?from=1&video_id=20210123
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:37:7 
+GET /v1/media/video?from=2&video_id=16956
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:37:8 
+GET /v1/media/video?from=1&video_id=20210327
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:38:8 
+GET /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6e278dc0f83e8825926ed6aef0a86abc9d2c140837afb95b763dd5a884e8437c","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:38:55 
+GET /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"07ba0a0c52e3665150a56d477440ef47efde9f2957a6a9e0aae78b2e32cd5971","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:39:20 
+GET /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"b7827119ef8cc285a5c3750f1c76dde0163776657def58b9819bdadcfc5dcfaa","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:39:46 
+GET /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"6d483262d0aa5fe385f809ff92a19954ed585579aef70f976b9819970900a376","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+
+2022/3/30 12:40:31 
+OPTIONS /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","accept":"*/*","access-control-request-method":"GET","access-control-request-headers":"token","origin":"http://localhost:8080","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","sec-fetch-mode":"cors","sec-fetch-site":"cross-site","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+SyntaxError: Invalid regular expression: /(token\/get\b)|(user\/temporary\b))/: Unmatched ')'
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:47:17
+    at step (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:33:23)
+    at Object.next (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:14:53)
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:4:12)
+    at middWareToken (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:42:51)
+    at dispatch (/Users/atoz/Desktop/typescript/new-play-room/node_modules/koa-compose/index.js:42:32)
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareException.js:55:38
+    at step (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareException.js:33:23)
+
+2022/3/30 12:40:39 
+OPTIONS /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","accept":"*/*","access-control-request-method":"GET","access-control-request-headers":"token","origin":"http://localhost:8080","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","sec-fetch-mode":"cors","sec-fetch-site":"cross-site","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+SyntaxError: Invalid regular expression: /(token\/get\b)|(user\/temporary\b))/: Unmatched ')'
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:47:17
+    at step (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:33:23)
+    at Object.next (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:14:53)
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:4:12)
+    at middWareToken (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareToken.js:42:51)
+    at dispatch (/Users/atoz/Desktop/typescript/new-play-room/node_modules/koa-compose/index.js:42:32)
+    at /Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareException.js:55:38
+    at step (/Users/atoz/Desktop/typescript/new-play-room/dist/middleware/middWareException.js:33:23)
+
+2022/3/30 12:41:52 
+GET /v1/media/video?from=1&video_id=20220063
+header: {"host":"127.0.0.1:3001","connection":"keep-alive","sec-ch-ua":"\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\"","accept":"application/json, text/plain, */*","sec-ch-ua-mobile":"?0","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36","token":"2f2a9e730cee7008c0f7d69efc42b3f1e66f531c07bcacb57a57fb5e726a3cca","sec-ch-ua-platform":"\"macOS\"","origin":"http://localhost:8080","sec-fetch-site":"cross-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:8080/","accept-encoding":"gzip, deflate, br","accept-language":"zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"}
+undefined
+

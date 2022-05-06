@@ -36,29 +36,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.middWareToken = void 0;
-var exceptions_1 = require("../exceptions");
-var ServiceToken_1 = require("../services/ServiceToken");
-var middWareToken = function (ctx, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var fillterRouter, token;
+exports.getPlayIframeSrc = exports.BaseZerg = void 0;
+var BaseZerg = /** @class */ (function () {
+    function BaseZerg() {
+        this.userAgeent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_1 like Mac OS X; zh-CN) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/19B74 UCBrowser/13.6.4.1594 Mobile AliApp(TUnionSDK/0.1.20.4)------------------------------------------Mozilla/5.0 (Linux; U; Android 11; zh-CN; Mi 10 Build/RKQ1.200826.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/78.0.3904.108 UCBrowser/13.6.7.1148 Mobile Safari/537.36';
+    }
+    return BaseZerg;
+}());
+exports.BaseZerg = BaseZerg;
+var getPlayIframeSrc = function (page, url, selectors) { return __awaiter(void 0, void 0, void 0, function () {
+    var codeResult;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                fillterRouter = /(token\/get\b)|(user\/temporary\b)/i;
-                if (!(fillterRouter.test(ctx.url) === true)) return [3 /*break*/, 2];
-                return [4 /*yield*/, next()];
-            case 1: return [2 /*return*/, _a.sent()];
-            case 2:
-                token = ctx.header.token;
-                if (!token) {
-                    throw new exceptions_1.ExceptionToken.Miss();
-                }
-                ServiceToken_1.ServiceToken.hasIn(token);
-                return [4 /*yield*/, next()];
-            case 3:
+            case 0: return [4 /*yield*/, page.goto(url)];
+            case 1:
                 _a.sent();
-                return [2 /*return*/];
+                return [4 /*yield*/, page.evaluate(function (selectors) {
+                        var iframe = document.querySelector(selectors);
+                        return new Promise(function (resovle, reject) {
+                            var startDate = Date.now();
+                            var getSrc = function () {
+                                if (iframe.src) {
+                                    return resovle(iframe.src);
+                                }
+                                if (Date.now() - startDate > 1000) {
+                                    reject(new Error('网络超时'));
+                                }
+                                else {
+                                    requestAnimationFrame(getSrc);
+                                }
+                            };
+                            getSrc();
+                        }).then(function (src) {
+                            return { html: document.documentElement.innerHTML, src: src };
+                        })["catch"](function (error) {
+                            return { html: document.documentElement.innerHTML, src: '' };
+                        });
+                    }, selectors)];
+            case 2:
+                codeResult = _a.sent();
+                return [2 /*return*/, codeResult];
         }
     });
 }); };
-exports.middWareToken = middWareToken;
+exports.getPlayIframeSrc = getPlayIframeSrc;

@@ -43,6 +43,8 @@ exports.getZergPlayUrl = exports.getZergDetail = void 0;
 var config_1 = __importDefault(require("../config"));
 var ROOM_FROM_1 = require("../menu/ROOM_FROM");
 var ModelOnline_1 = require("../models/ModelOnline");
+require("./ZergACGTV");
+require("./ZergMaliMali");
 var child_process_1 = require("child_process");
 var exceptions_1 = require("../exceptions");
 var modelOnlie = new ModelOnline_1.ModelOnline('online');

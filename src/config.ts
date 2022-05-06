@@ -1,6 +1,7 @@
 export default {
     // 服务器的ip地址，如果是线上服务器。写入线上服务器的ip
-    runIp: '127.0.0.1',
+    //runIp: '127.0.0.1',
+    runIp: '172.245.59.163',
 
     root: __dirname,
 
